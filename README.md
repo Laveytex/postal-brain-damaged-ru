@@ -59,6 +59,10 @@ python tools/check_ru.py
 
 Стиль и термины перевода — в [GLOSSARY.md](GLOSSARY.md). Правки и замечания — через Issues / Pull requests.
 
+## Автор и лицензия
+
+Перевод и патчер: **Laveytex**. Лицензия — [MIT](LICENSE): можно использовать и дорабатывать, сохраняя упоминание автора.
+
 ## Отказ от ответственности
 
 Проект не связан с Running With Scissors и Hyperstrange. POSTAL — торговая марка Running With Scissors, Inc. Для работы нужна легальная копия игры.
