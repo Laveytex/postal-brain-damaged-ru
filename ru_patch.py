@@ -10,7 +10,7 @@
 Steam «Проверить целостность файлов» тоже возвращает оригиналы."""
 import os, sys, json, struct, shutil, time, re, base64, subprocess
 
-VERSION = "1.0"
+VERSION = "1.0.1"
 GAME_DIR_NAME = "POSTAL Brain Damaged"
 DATA_NAME = "POSTAL Brain Damaged_Data"
 GAME_EXE = "POSTAL Brain Damaged.exe"
@@ -55,6 +55,12 @@ def find_game():
     p = here
     for _ in range(4):                      # патчер лежит в папке игры или во вложенной папке
         if is_game_dir(p): return p
+        p = os.path.dirname(p)
+    p = here                                # запуск из Steam Workshop: <библиотека>\steamapps\workshop\content\<appid>\<id>
+    while os.path.dirname(p) != p:
+        if os.path.basename(p).lower() == "steamapps":
+            cand = os.path.join(p, "common", GAME_DIR_NAME)
+            if is_game_dir(cand): return cand
         p = os.path.dirname(p)
     for lib in steam_libraries():
         p = os.path.join(lib, "steamapps", "common", GAME_DIR_NAME)

@@ -59,6 +59,8 @@ python tools/check_ru.py
 
 Стиль и термины перевода — в [GLOSSARY.md](GLOSSARY.md). Правки и замечания — через Issues / Pull requests.
 
+Публикация в Steam Workshop (для автора) — [steam_workshop/README_WORKSHOP.md](steam_workshop/README_WORKSHOP.md).
+
 ## Автор и лицензия
 
 Перевод и патчер: **Laveytex**. Лицензия — [MIT](LICENSE): можно использовать и дорабатывать, сохраняя упоминание автора.
