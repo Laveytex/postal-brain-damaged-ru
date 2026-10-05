@@ -263,6 +263,53 @@ def embed_cyrillic(o, d, kit):
           + d[L["tables_end"]:L["wh_off"]] + struct.pack('<ii', W, H) + d[L["wh_off"] + 8:])
     return nd
 
+def fix_preset_materials(env, font_atlas):
+    """Материалы-пресеты (напр. «FONT_ClickableClicked Material» для наведённой кнопки) ссылаются на копию
+    старого атласа 1024x1024. Перенаправляем их на новый атлас шрифта и ставим _TextureHeight.
+    font_atlas: имя шрифта -> (pathID атласа, высота атласа). Возвращает число изменённых материалов."""
+    names = {}
+    for o in env.objects:
+        if o.type.name == "Texture2D":
+            try:
+                n = o.read().m_Name
+                if n.startswith("FONT_"): names[o.path_id] = n
+            except Exception: pass
+    by_pid = {pid: (f, h) for f, (pid, h) in font_atlas.items()}
+    fixed = 0
+    for o in env.objects:
+        if o.type.name != "Material": continue
+        m = o.read()
+        tex = None
+        for it in m.m_SavedProperties.m_TexEnvs:
+            k, te = (it[0], it[1]) if isinstance(it, (list, tuple)) else (it.first, it.second)
+            if k == "_MainTex": tex = te
+        if tex is None or tex.m_Texture.m_FileID != 0: continue
+        pid = tex.m_Texture.m_PathID
+        if pid in by_pid:
+            target, h = pid, by_pid[pid][1]
+        else:
+            tname = names.get(pid, "")
+            if not tname.endswith(" Atlas"): continue
+            cands = [f for f in font_atlas if tname[:-6].startswith(f)]
+            if not cands: continue
+            target, h = font_atlas[max(cands, key=len)]
+        dirty = False
+        if pid != target:
+            tex.m_Texture.m_PathID = target; dirty = True
+        fl = m.m_SavedProperties.m_Floats
+        for i, it in enumerate(fl):
+            k = it[0] if isinstance(it, (list, tuple)) else it.first
+            v = it[1] if isinstance(it, (list, tuple)) else it.second
+            if k != "_TextureHeight" or v == float(h): continue
+            if isinstance(it, tuple): fl[i] = (k, float(h))
+            elif isinstance(it, list): it[1] = float(h)
+            else: it.second = float(h)
+            dirty = True
+        if dirty:
+            m.save(); fixed += 1
+            print("  материал %s: атлас и высота обновлены" % m.m_Name)
+    return fixed
+
 def live_bundles(data_dir):
     """Бандлы, которые реально грузит игра (по catalog.json)."""
     try:
@@ -299,6 +346,7 @@ class Patcher:
             res_fh = open(path + ".resS", "rb")
             env.register_cab(os.path.basename(path) + ".resS", EndianBinaryReader(res_fh, endian="<"))
         changed = already = fonts = 0
+        font_atlas = {}
         try:
             for o in env.objects:
                 if o.type.name != "MonoBehaviour": continue
@@ -315,8 +363,13 @@ class Patcher:
                             if emb is not None:
                                 nd = emb; fonts += 1
                                 print("  шрифт %s: добавлена кириллица" % fname)
+                            L2 = font_layout(nd if nd is not None else d)
+                            if L2 and L2["H"] == kits[FONT_FAMILY[fname]]["atlas_height"] and L2["atlases"][0][0] == 0:
+                                font_atlas[fname] = (L2["atlases"][0][1], L2["H"])
                 if nd is not None:
                     o.set_raw_data(nd); changed += 1
+            if font_atlas:
+                changed += fix_preset_materials(env, font_atlas)
             name = os.path.basename(rel)
             if changed:
                 self.backup(path, fresh=(already == 0))
