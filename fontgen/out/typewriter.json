@@ -1,0 +1,844 @@
+{
+ "family": "typewriter",
+ "fonts": [
+  "FONT_Text",
+  "FONT_InputText"
+ ],
+ "atlas_width": 1024,
+ "atlas_height": 2048,
+ "padding": 15,
+ "sdf_slope": 0.02922132205525734,
+ "glyph_index_base": 21000,
+ "aliases": {
+  "А": "A",
+  "В": "B",
+  "Е": "E",
+  "К": "K",
+  "М": "M",
+  "Н": "H",
+  "О": "O",
+  "Р": "P",
+  "С": "C",
+  "Т": "T",
+  "Х": "X",
+  "а": "a",
+  "е": "e",
+  "о": "o",
+  "р": "p",
+  "с": "c",
+  "у": "y",
+  "х": "x"
+ },
+ "glyphs": [
+  {
+   "char": "Б",
+   "unicode": 1041,
+   "rect": [
+    15,
+    1956,
+    64,
+    77
+   ],
+   "width": 64.0,
+   "height": 77.0,
+   "bearingX": -2.156,
+   "bearingY": 75.469,
+   "advance": 62.844
+  },
+  {
+   "char": "Г",
+   "unicode": 1043,
+   "rect": [
+    111,
+    1954,
+    56,
+    79
+   ],
+   "width": 56.0,
+   "height": 79.0,
+   "bearingX": -2.156,
+   "bearingY": 77.625,
+   "advance": 55.297
+  },
+  {
+   "char": "Д",
+   "unicode": 1044,
+   "rect": [
+    199,
+    1940,
+    68,
+    93
+   ],
+   "width": 68.0,
+   "height": 93.0,
+   "bearingX": -2.156,
+   "bearingY": 75.469,
+   "advance": 67.156
+  },
+  {
+   "char": "Ё",
+   "unicode": 1025,
+   "rect": [
+    299,
+    1935,
+    63,
+    98
+   ],
+   "width": 63.0,
+   "height": 98.0,
+   "bearingX": -2.156,
+   "bearingY": 97.031,
+   "advance": 61.766
+  },
+  {
+   "char": "Ж",
+   "unicode": 1046,
+   "rect": [
+    394,
+    1955,
+    75,
+    78
+   ],
+   "width": 75.0,
+   "height": 78.0,
+   "bearingX": -2.156,
+   "bearingY": 75.469,
+   "advance": 74.703
+  },
+  {
+   "char": "З",
+   "unicode": 1047,
+   "rect": [
+    501,
+    1954,
+    58,
+    79
+   ],
+   "width": 58.0,
+   "height": 79.0,
+   "bearingX": -2.156,
+   "bearingY": 75.469,
+   "advance": 57.453
+  },
+  {
+   "char": "И",
+   "unicode": 1048,
+   "rect": [
+    591,
+    1955,
+    67,
+    78
+   ],
+   "width": 67.0,
+   "height": 78.0,
+   "bearingX": -2.156,
+   "bearingY": 75.469,
+   "advance": 66.078
+  },
+  {
+   "char": "Й",
+   "unicode": 1049,
+   "rect": [
+    690,
+    1935,
+    68,
+    98
+   ],
+   "width": 68.0,
+   "height": 98.0,
+   "bearingX": -2.156,
+   "bearingY": 94.875,
+   "advance": 67.156
+  },
+  {
+   "char": "Л",
+   "unicode": 1051,
+   "rect": [
+    790,
+    1955,
+    68,
+    78
+   ],
+   "width": 68.0,
+   "height": 78.0,
+   "bearingX": -2.156,
+   "bearingY": 74.391,
+   "advance": 67.156
+  },
+  {
+   "char": "П",
+   "unicode": 1055,
+   "rect": [
+    890,
+    1960,
+    61,
+    73
+   ],
+   "width": 61.0,
+   "height": 73.0,
+   "bearingX": -2.156,
+   "bearingY": 71.156,
+   "advance": 60.688
+  },
+  {
+   "char": "У",
+   "unicode": 1059,
+   "rect": [
+    15,
+    1831,
+    65,
+    72
+   ],
+   "width": 65.0,
+   "height": 72.0,
+   "bearingX": -2.156,
+   "bearingY": 70.078,
+   "advance": 63.922
+  },
+  {
+   "char": "Ф",
+   "unicode": 1060,
+   "rect": [
+    112,
+    1830,
+    67,
+    73
+   ],
+   "width": 67.0,
+   "height": 73.0,
+   "bearingX": -2.156,
+   "bearingY": 71.156,
+   "advance": 66.078
+  },
+  {
+   "char": "Ц",
+   "unicode": 1062,
+   "rect": [
+    211,
+    1816,
+    63,
+    87
+   ],
+   "width": 63.0,
+   "height": 87.0,
+   "bearingX": -2.156,
+   "bearingY": 69.0,
+   "advance": 61.766
+  },
+  {
+   "char": "Ч",
+   "unicode": 1063,
+   "rect": [
+    306,
+    1832,
+    61,
+    71
+   ],
+   "width": 61.0,
+   "height": 71.0,
+   "bearingX": -2.156,
+   "bearingY": 69.0,
+   "advance": 60.688
+  },
+  {
+   "char": "Ш",
+   "unicode": 1064,
+   "rect": [
+    399,
+    1833,
+    67,
+    70
+   ],
+   "width": 67.0,
+   "height": 70.0,
+   "bearingX": -2.156,
+   "bearingY": 69.0,
+   "advance": 66.078
+  },
+  {
+   "char": "Щ",
+   "unicode": 1065,
+   "rect": [
+    498,
+    1812,
+    67,
+    91
+   ],
+   "width": 67.0,
+   "height": 91.0,
+   "bearingX": -2.156,
+   "bearingY": 69.0,
+   "advance": 66.078
+  },
+  {
+   "char": "Ъ",
+   "unicode": 1066,
+   "rect": [
+    597,
+    1833,
+    65,
+    70
+   ],
+   "width": 65.0,
+   "height": 70.0,
+   "bearingX": -2.156,
+   "bearingY": 67.922,
+   "advance": 63.922
+  },
+  {
+   "char": "Ы",
+   "unicode": 1067,
+   "rect": [
+    694,
+    1832,
+    66,
+    71
+   ],
+   "width": 66.0,
+   "height": 71.0,
+   "bearingX": -2.156,
+   "bearingY": 67.922,
+   "advance": 65.0
+  },
+  {
+   "char": "Ь",
+   "unicode": 1068,
+   "rect": [
+    792,
+    1832,
+    55,
+    71
+   ],
+   "width": 55.0,
+   "height": 71.0,
+   "bearingX": -2.156,
+   "bearingY": 67.922,
+   "advance": 54.219
+  },
+  {
+   "char": "Э",
+   "unicode": 1069,
+   "rect": [
+    879,
+    1830,
+    55,
+    73
+   ],
+   "width": 55.0,
+   "height": 73.0,
+   "bearingX": -2.156,
+   "bearingY": 69.0,
+   "advance": 54.219
+  },
+  {
+   "char": "Ю",
+   "unicode": 1070,
+   "rect": [
+    15,
+    1708,
+    69,
+    72
+   ],
+   "width": 69.0,
+   "height": 72.0,
+   "bearingX": -2.156,
+   "bearingY": 69.0,
+   "advance": 68.234
+  },
+  {
+   "char": "Я",
+   "unicode": 1071,
+   "rect": [
+    116,
+    1710,
+    63,
+    70
+   ],
+   "width": 63.0,
+   "height": 70.0,
+   "bearingX": -2.156,
+   "bearingY": 67.922,
+   "advance": 61.766
+  },
+  {
+   "char": "б",
+   "unicode": 1073,
+   "rect": [
+    211,
+    1707,
+    50,
+    73
+   ],
+   "width": 50.0,
+   "height": 73.0,
+   "bearingX": -2.097,
+   "bearingY": 70.792,
+   "advance": 49.605
+  },
+  {
+   "char": "в",
+   "unicode": 1074,
+   "rect": [
+    293,
+    1727,
+    54,
+    53
+   ],
+   "width": 54.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 51.98,
+   "advance": 53.565
+  },
+  {
+   "char": "г",
+   "unicode": 1075,
+   "rect": [
+    379,
+    1728,
+    49,
+    52
+   ],
+   "width": 49.0,
+   "height": 52.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 47.625
+  },
+  {
+   "char": "д",
+   "unicode": 1076,
+   "rect": [
+    460,
+    1713,
+    59,
+    67
+   ],
+   "width": 59.0,
+   "height": 67.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 58.516
+  },
+  {
+   "char": "ё",
+   "unicode": 1105,
+   "rect": [
+    551,
+    1705,
+    50,
+    75
+   ],
+   "width": 50.0,
+   "height": 75.0,
+   "bearingX": -2.097,
+   "bearingY": 71.782,
+   "advance": 49.605
+  },
+  {
+   "char": "ж",
+   "unicode": 1078,
+   "rect": [
+    633,
+    1727,
+    64,
+    53
+   ],
+   "width": 64.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 63.466
+  },
+  {
+   "char": "з",
+   "unicode": 1079,
+   "rect": [
+    729,
+    1727,
+    49,
+    53
+   ],
+   "width": 49.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 47.625
+  },
+  {
+   "char": "и",
+   "unicode": 1080,
+   "rect": [
+    810,
+    1728,
+    54,
+    52
+   ],
+   "width": 54.0,
+   "height": 52.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 53.565
+  },
+  {
+   "char": "й",
+   "unicode": 1081,
+   "rect": [
+    896,
+    1708,
+    54,
+    72
+   ],
+   "width": 54.0,
+   "height": 72.0,
+   "bearingX": -2.097,
+   "bearingY": 70.792,
+   "advance": 53.565
+  },
+  {
+   "char": "к",
+   "unicode": 1082,
+   "rect": [
+    15,
+    1621,
+    57,
+    52
+   ],
+   "width": 57.0,
+   "height": 52.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 56.536
+  },
+  {
+   "char": "л",
+   "unicode": 1083,
+   "rect": [
+    104,
+    1620,
+    59,
+    53
+   ],
+   "width": 59.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 58.516
+  },
+  {
+   "char": "м",
+   "unicode": 1084,
+   "rect": [
+    195,
+    1620,
+    60,
+    53
+   ],
+   "width": 60.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 50.99,
+   "advance": 59.506
+  },
+  {
+   "char": "н",
+   "unicode": 1085,
+   "rect": [
+    287,
+    1622,
+    56,
+    51
+   ],
+   "width": 56.0,
+   "height": 51.0,
+   "bearingX": -2.097,
+   "bearingY": 50.0,
+   "advance": 55.546
+  },
+  {
+   "char": "п",
+   "unicode": 1087,
+   "rect": [
+    375,
+    1620,
+    52,
+    53
+   ],
+   "width": 52.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 51.585
+  },
+  {
+   "char": "т",
+   "unicode": 1090,
+   "rect": [
+    459,
+    1619,
+    51,
+    54
+   ],
+   "width": 51.0,
+   "height": 54.0,
+   "bearingX": -2.097,
+   "bearingY": 53.465,
+   "advance": 50.595
+  },
+  {
+   "char": "ф",
+   "unicode": 1092,
+   "rect": [
+    542,
+    1586,
+    56,
+    87
+   ],
+   "width": 56.0,
+   "height": 87.0,
+   "bearingX": -2.097,
+   "bearingY": 70.297,
+   "advance": 55.546
+  },
+  {
+   "char": "ц",
+   "unicode": 1094,
+   "rect": [
+    630,
+    1603,
+    54,
+    70
+   ],
+   "width": 54.0,
+   "height": 70.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 53.565
+  },
+  {
+   "char": "ч",
+   "unicode": 1095,
+   "rect": [
+    716,
+    1619,
+    52,
+    54
+   ],
+   "width": 52.0,
+   "height": 54.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 51.585
+  },
+  {
+   "char": "ш",
+   "unicode": 1096,
+   "rect": [
+    800,
+    1621,
+    58,
+    52
+   ],
+   "width": 58.0,
+   "height": 52.0,
+   "bearingX": -2.097,
+   "bearingY": 51.485,
+   "advance": 57.526
+  },
+  {
+   "char": "щ",
+   "unicode": 1097,
+   "rect": [
+    890,
+    1603,
+    60,
+    70
+   ],
+   "width": 60.0,
+   "height": 70.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 59.506
+  },
+  {
+   "char": "ъ",
+   "unicode": 1098,
+   "rect": [
+    15,
+    1501,
+    54,
+    53
+   ],
+   "width": 54.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 51.485,
+   "advance": 53.565
+  },
+  {
+   "char": "ы",
+   "unicode": 1099,
+   "rect": [
+    101,
+    1500,
+    56,
+    54
+   ],
+   "width": 56.0,
+   "height": 54.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 55.546
+  },
+  {
+   "char": "ь",
+   "unicode": 1100,
+   "rect": [
+    189,
+    1500,
+    49,
+    54
+   ],
+   "width": 49.0,
+   "height": 54.0,
+   "bearingX": -2.097,
+   "bearingY": 51.485,
+   "advance": 47.625
+  },
+  {
+   "char": "э",
+   "unicode": 1101,
+   "rect": [
+    270,
+    1499,
+    48,
+    55
+   ],
+   "width": 48.0,
+   "height": 55.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 46.635
+  },
+  {
+   "char": "ю",
+   "unicode": 1102,
+   "rect": [
+    350,
+    1500,
+    57,
+    54
+   ],
+   "width": 57.0,
+   "height": 54.0,
+   "bearingX": -2.097,
+   "bearingY": 52.475,
+   "advance": 56.536
+  },
+  {
+   "char": "я",
+   "unicode": 1103,
+   "rect": [
+    439,
+    1501,
+    53,
+    53
+   ],
+   "width": 53.0,
+   "height": 53.0,
+   "bearingX": -2.097,
+   "bearingY": 50.495,
+   "advance": 52.575
+  },
+  {
+   "char": "«",
+   "unicode": 171,
+   "rect": [
+    524,
+    1494,
+    58,
+    60
+   ],
+   "width": 58.0,
+   "height": 60.0,
+   "bearingX": -2.273,
+   "bearingY": 62.531,
+   "advance": 56.977
+  },
+  {
+   "char": "»",
+   "unicode": 187,
+   "rect": [
+    614,
+    1495,
+    60,
+    59
+   ],
+   "width": 60.0,
+   "height": 59.0,
+   "bearingX": -2.273,
+   "bearingY": 61.453,
+   "advance": 59.133
+  },
+  {
+   "char": "–",
+   "unicode": 8211,
+   "rect": [
+    706,
+    1538,
+    63,
+    16
+   ],
+   "width": 63.0,
+   "height": 16.0,
+   "bearingX": -2.273,
+   "bearingY": 36.656,
+   "advance": 61.289
+  },
+  {
+   "char": "…",
+   "unicode": 8230,
+   "rect": [
+    801,
+    1531,
+    83,
+    23
+   ],
+   "width": 83.0,
+   "height": 23.0,
+   "bearingX": -2.273,
+   "bearingY": 23.719,
+   "advance": 81.773
+  },
+  {
+   "char": "№",
+   "unicode": 8470,
+   "rect": [
+    15,
+    1391,
+    94,
+    71
+   ],
+   "width": 94.0,
+   "height": 71.0,
+   "bearingX": -2.273,
+   "bearingY": 65.766,
+   "advance": 92.555
+  },
+  {
+   "char": "—",
+   "unicode": 8212,
+   "rect": [
+    141,
+    1446,
+    106,
+    16
+   ],
+   "width": 106.0,
+   "height": 16.0,
+   "bearingX": -2.273,
+   "bearingY": 36.656,
+   "advance": 101.18
+  }
+ ]
+}

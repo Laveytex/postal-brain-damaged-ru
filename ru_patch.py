@@ -10,7 +10,7 @@
 Steam «Проверить целостность файлов» тоже возвращает оригиналы."""
 import os, sys, json, struct, shutil, time, re, base64, subprocess
 
-VERSION = "1.0.1"
+VERSION = "1.1.0"
 GAME_DIR_NAME = "POSTAL Brain Damaged"
 DATA_NAME = "POSTAL Brain Damaged_Data"
 GAME_EXE = "POSTAL Brain Damaged.exe"
@@ -154,6 +154,123 @@ def patch_font(d):
     if d[off] == 1: return None
     return d[:off] + bytes([1]) + d[off + 1:]
 
+# ---------- кириллица в фирменных шрифтах ----------
+FONT_FAMILY = {"FONT_Clickable": "smash", "FONT_NotClickable": "smash", "FONT_Text": "typewriter", "FONT_InputText": "typewriter"}
+CYR_MARK = 0x0416   # «Ж»: если она есть в шрифте — кириллица уже встроена
+
+def load_font_kits():
+    kits = {}
+    for fam in ("smash", "typewriter"):
+        try:
+            from PIL import Image
+            info = json.load(open(res_path(os.path.join("fontgen", "out", fam + ".json")), encoding="utf8"))
+            info["top"] = Image.open(res_path(os.path.join("fontgen", "out", fam + "_atlas_top.png"))).convert("L")
+            kits[fam] = info
+        except Exception as e:
+            print("  ВНИМАНИЕ: нет данных шрифта %s (%s) — кириллица в нём останется запасной" % (fam, e))
+    return kits
+
+def font_layout(d):
+    """Разбор TMP_FontAsset (TMP 3.0, формат 1.1.0, Unity 2021.3.14): нужные смещения и таблицы. None — другой формат."""
+    try:
+        r = [28]
+        def i32():
+            v = struct.unpack_from('<i', d, r[0])[0]; r[0] += 4; return v
+        def s_():
+            n = i32(); v = d[r[0]:r[0] + n]; r[0] += n; r[0] = (r[0] + 3) & ~3; return v
+        def pptr():
+            v = struct.unpack_from('<iq', d, r[0]); r[0] += 12; return v
+        L = {"name": s_().decode('utf8')}
+        i32(); L["material"] = pptr(); i32()
+        s_(); s_(); pptr(); i32()                       # version, GUID, source font, population mode
+        i32(); s_(); s_(); i32(); r[0] += 4 + 15 * 4      # FaceInfo
+        L["glyph_off"] = r[0]
+        n = i32(); L["glyphs"] = [struct.unpack_from('<I5f4if i', d, r[0] + 48 * k) for k in range(n)]; r[0] += 48 * n
+        m = i32(); L["chars"] = [struct.unpack_from('<iIIf', d, r[0] + 16 * k) for k in range(m)]; r[0] += 16 * m
+        L["tables_end"] = r[0]
+        a = i32(); L["atlases"] = [pptr() for _ in range(a)]
+        i32(); i32(); i32()                             # atlas index, multi-atlas, clear dynamic
+        for _ in range(2):                              # used / free rects
+            n_r = i32(); r[0] += 16 * n_r
+        s_(); r[0] += 4 * 20                            # legacy fontInfo: Name + 20 полей
+        pptr()                                          # legacy atlas
+        L["wh_off"] = r[0]
+        L["W"], L["H"], L["pad"] = struct.unpack_from('<iii', d, r[0])
+        glyph_idx = {g[0] for g in L["glyphs"]}
+        if not (1 <= a <= 16 and L["W"] in (256, 512, 1024, 2048, 4096) and 0 < L["pad"] < 64
+                and all(c[2] in glyph_idx for c in L["chars"])):
+            return None
+        return L
+    except (struct.error, UnicodeDecodeError):
+        return None
+
+def embed_cyrillic(o, d, kit):
+    """Встраивает кириллицу в FontAsset: атлас 1024x1024 -> 1024x2048 (оригинал внизу, наши глифы сверху),
+    дописывает таблицы глифов/символов, обновляет _TextureHeight материала. Возвращает новые байты или None."""
+    from PIL import Image
+    L = font_layout(d)
+    if L is None:
+        print("  ВНИМАНИЕ: не разобрал шрифт", d[32:32 + struct.unpack_from('<i', d, 28)[0]].decode('utf8', 'replace')); return None
+    if any(c[1] == CYR_MARK for c in L["chars"]): return None
+    W, H = kit["atlas_width"], kit["atlas_height"]
+    if (L["W"], L["H"]) != (W, H // 2) or L["pad"] != kit["padding"]:
+        print("  ВНИМАНИЕ: %s: неожиданный атлас %dx%d pad %d — пропускаю" % (L["name"], L["W"], L["H"], L["pad"])); return None
+    af = o.assets_file
+    fid, tex_pid = L["atlases"][0]
+    mfid, mat_pid = L["material"]
+    if fid != 0 or mfid != 0:
+        print("  ВНИМАНИЕ: %s: атлас/материал в другом файле — пропускаю" % L["name"]); return None
+    # атлас
+    tex = af.objects[tex_pid].read()
+    img = tex.image
+    chans = [img.getchannel(c) for c in img.getbands()]
+    sdf = max(chans, key=lambda c: c.getextrema()[1] - c.getextrema()[0])
+    if sdf.size != (W, H // 2): print("  ВНИМАНИЕ: %s: размер текстуры %s" % (L["name"], sdf.size)); return None
+    big = Image.new("L", (W, H), 0)
+    big.paste(sdf, (0, H // 2)); big.paste(kit["top"], (0, 0))
+    white = Image.new("L", (W, H), 255)
+    tex.set_image(Image.merge("RGBA", (white, white, white, big)), target_format=1)   # 1 = Alpha8
+    tex.save()
+    # материал: _TextureHeight
+    mat = af.objects[mat_pid].read()
+    fl = mat.m_SavedProperties.m_Floats
+    for i, it in enumerate(fl):
+        k = it[0] if isinstance(it, (list, tuple)) else it.first
+        if k != "_TextureHeight": continue
+        if isinstance(it, tuple): fl[i] = (k, float(H))
+        elif isinstance(it, list): it[1] = float(H)
+        else: it.second = float(H)
+    mat.save()
+    # таблицы
+    used = {g[0] for g in L["glyphs"]}
+    base = kit["glyph_index_base"]
+    while any(base + i in used for i in range(len(kit["glyphs"]))): base += 1000
+    glyph_bytes = b"".join(struct.pack('<I5f4if i', *g) for g in L["glyphs"])
+    char_bytes = b"".join(struct.pack('<iIIf', *c) for c in L["chars"])
+    have = {c[1] for c in L["chars"]}
+    n_g = len(L["glyphs"]); n_c = len(L["chars"])
+    for i, g in enumerate(kit["glyphs"]):
+        if g["unicode"] in have: continue
+        x, y, w, h = g["rect"]
+        glyph_bytes += struct.pack('<I5f4if i', base + i, g["width"], g["height"], g["bearingX"], g["bearingY"], g["advance"], x, y, w, h, 1.0, 0)
+        char_bytes += struct.pack('<iIIf', 1, g["unicode"], base + i, 1.0)
+        n_g += 1; n_c += 1
+    lat = {c[1]: c[2] for c in L["chars"]}
+    for cyr, latin in kit["aliases"].items():
+        if ord(cyr) in have or ord(latin) not in lat: continue
+        char_bytes += struct.pack('<iIIf', 1, ord(cyr), lat[ord(latin)], 1.0); n_c += 1
+    nd = (d[:L["glyph_off"]] + struct.pack('<i', n_g) + glyph_bytes + struct.pack('<i', n_c) + char_bytes
+          + d[L["tables_end"]:L["wh_off"]] + struct.pack('<ii', W, H) + d[L["wh_off"] + 8:])
+    return nd
+
+def live_bundles(data_dir):
+    """Бандлы, которые реально грузит игра (по catalog.json)."""
+    try:
+        j = json.load(open(os.path.join(data_dir, "StreamingAssets", "aa", "catalog.json"), encoding="utf8"))
+        return {os.path.basename(i.replace("\\", "/")) for i in j["m_InternalIds"] if i.endswith(".bundle")}
+    except Exception:
+        return None
+
 # ---------- файлы ----------
 class Patcher:
     def __init__(self, game):
@@ -168,30 +285,48 @@ class Patcher:
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             shutil.copy2(path, dst)
 
-    def patch_file(self, rel, ru, is_bundle):
+    def patch_file(self, rel, ru, is_bundle, kits=None):
         import UnityPy
+        from UnityPy.streams import EndianBinaryReader
         path = os.path.join(self.data, rel)
         if not os.path.exists(path): return 0
         with open(path, 'rb') as fh: raw = fh.read()
         env = UnityPy.load(raw)      # из памяти, чтобы Windows дала заменить файл
         del raw
-        changed = already = 0
-        for o in env.objects:
-            if o.type.name != "MonoBehaviour": continue
-            d = o.get_raw_data()
-            nd, was = patch_record(d, ru)
-            already += was
-            if nd is None and rel != "resources.assets":
-                nd = patch_font(d)
-            if nd is not None:
-                o.set_raw_data(nd); changed += 1
-        name = os.path.basename(rel)
+        res_fh = None
+        if kits and not is_bundle and os.path.exists(path + ".resS"):
+            # пиксели атласов лежат в .resS (его не меняем, поэтому читаем прямо из файла)
+            res_fh = open(path + ".resS", "rb")
+            env.register_cab(os.path.basename(path) + ".resS", EndianBinaryReader(res_fh, endian="<"))
+        changed = already = fonts = 0
+        try:
+            for o in env.objects:
+                if o.type.name != "MonoBehaviour": continue
+                d = o.get_raw_data()
+                nd, was = patch_record(d, ru)
+                already += was
+                if nd is None and rel != "resources.assets":
+                    nd = patch_font(d)
+                    if kits:
+                        n = struct.unpack_from('<i', d, 28)[0] if len(d) > 40 else 0
+                        fname = d[32:32 + n].decode('utf8', 'replace') if 0 < n < 64 else ""
+                        if fname in FONT_FAMILY and FONT_FAMILY[fname] in kits:
+                            emb = embed_cyrillic(o, nd if nd is not None else d, kits[FONT_FAMILY[fname]])
+                            if emb is not None:
+                                nd = emb; fonts += 1
+                                print("  шрифт %s: добавлена кириллица" % fname)
+                if nd is not None:
+                    o.set_raw_data(nd); changed += 1
+            name = os.path.basename(rel)
+            if changed:
+                self.backup(path, fresh=(already == 0))
+                tmp = path + ".ru_tmp"
+                with open(tmp, "wb") as f:
+                    f.write(env.file.save(packer="original") if is_bundle else env.file.save())
+        finally:
+            if res_fh: res_fh.close()
         if not changed:
             print("  %s: уже переведён" % name if already else "  %s: нечего менять" % name); return 0
-        self.backup(path, fresh=(already == 0))
-        tmp = path + ".ru_tmp"
-        with open(tmp, "wb") as f:
-            f.write(env.file.save(packer="original") if is_bundle else env.file.save())
         with open(tmp, 'rb') as fh: UnityPy.load(fh.read())   # проверка, что файл читается
         os.replace(tmp, path)
         print("  %s: заменено записей: %d" % (name, changed))
@@ -224,13 +359,16 @@ class Patcher:
         print("Строк перевода: %d. Это займёт 3-5 минут, не закрывай окно..." % len(ru))
         t0 = time.time()
         total = 0
-        for rel in ("resources.assets", "sharedassets0.assets"):
-            total += self.patch_file(rel, ru, False)
+        kits = load_font_kits()
+        live = live_bundles(self.data)
+        total += self.patch_file("resources.assets", ru, False)
+        total += self.patch_file("sharedassets0.assets", ru, False, kits)
         aa = os.path.join(self.data, AA)
         bundles = sorted(f for f in os.listdir(aa) if f.startswith("defaultlocalgroup") and f.endswith(".bundle")) if os.path.isdir(aa) else []
         if bundles: self.fix_catalog()
         for f in bundles:
-            total += self.patch_file(os.path.join(AA, f), ru, True)
+            # шрифты меняем только в бандлах, которые игра реально грузит (остальные — остатки старых сборок)
+            total += self.patch_file(os.path.join(AA, f), ru, True, kits if (live is None or f in live) else None)
         print("Готово за %.0f с. В игре: Настройки -> Язык -> «Русский»." % (time.time() - t0))
 
     def restore(self):

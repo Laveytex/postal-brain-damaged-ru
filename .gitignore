@@ -11,3 +11,6 @@ steam_workshop/content/*.exe
 steam_workshop/build/
 steam_workshop/steamcmd/
 ssfn*
+
+# превью сборки шрифтов содержат глифы игры
+fontgen/preview/
