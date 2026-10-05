@@ -10,7 +10,7 @@
 Steam «Проверить целостность файлов» тоже возвращает оригиналы."""
 import os, sys, json, struct, shutil, time, re, base64, subprocess
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 GAME_DIR_NAME = "POSTAL Brain Damaged"
 DATA_NAME = "POSTAL Brain Damaged_Data"
 GAME_EXE = "POSTAL Brain Damaged.exe"
@@ -221,15 +221,24 @@ def embed_cyrillic(o, d, kit):
     if fid != 0 or mfid != 0:
         print("  ВНИМАНИЕ: %s: атлас/материал в другом файле — пропускаю" % L["name"]); return None
     # атлас
+    # Alpha8 читаем/пишем напрямую (1 байт на пиксель, строки снизу вверх): tex.image/set_image тянут
+    # UnityPy.export -> fmod_toolkit (fmod.dll), который ломается в собранном exe.
     tex = af.objects[tex_pid].read()
-    img = tex.image
-    chans = [img.getchannel(c) for c in img.getbands()]
-    sdf = max(chans, key=lambda c: c.getextrema()[1] - c.getextrema()[0])
-    if sdf.size != (W, H // 2): print("  ВНИМАНИЕ: %s: размер текстуры %s" % (L["name"], sdf.size)); return None
+    tw, th = tex.m_Width, tex.m_Height
+    if int(tex.m_TextureFormat) != 1 or (tw, th) != (W, H // 2):
+        print("  ВНИМАНИЕ: %s: атлас %dx%d формат %s — пропускаю" % (L["name"], tw, th, tex.m_TextureFormat)); return None
+    raw = bytes(tex.get_image_data())
+    sdf = Image.frombytes("L", (tw, th), raw[:tw * th]).transpose(Image.Transpose.FLIP_TOP_BOTTOM)
     big = Image.new("L", (W, H), 0)
     big.paste(sdf, (0, H // 2)); big.paste(kit["top"], (0, 0))
-    white = Image.new("L", (W, H), 255)
-    tex.set_image(Image.merge("RGBA", (white, white, white, big)), target_format=1)   # 1 = Alpha8
+    data = big.transpose(Image.Transpose.FLIP_TOP_BOTTOM).tobytes()
+    tex.m_Width, tex.m_Height = W, H
+    tex.image_data = data
+    tex.m_CompleteImageSize = len(data)
+    if getattr(tex, "m_MipCount", None) is not None: tex.m_MipCount = 1
+    if getattr(tex, "m_MipMap", None) is not None: tex.m_MipMap = False
+    if tex.m_StreamData is not None:
+        tex.m_StreamData.path = ""; tex.m_StreamData.offset = 0; tex.m_StreamData.size = 0
     tex.save()
     # материал: _TextureHeight
     mat = af.objects[mat_pid].read()
