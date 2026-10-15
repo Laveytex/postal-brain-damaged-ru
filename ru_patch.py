@@ -8,9 +8,9 @@
   ru_patch.exe --game "D:\\...\\POSTAL Brain Damaged"   - указать папку игры вручную
 Перед изменением оригиналы копируются в <папка игры>\\_ru_backup.
 Steam «Проверить целостность файлов» тоже возвращает оригиналы."""
-import os, sys, json, struct, shutil, time, re, base64, subprocess
+import os, sys, json, struct, shutil, time, re, base64, subprocess, hashlib
 
-VERSION = "1.1.1"
+VERSION = "1.2.0-dev"
 GAME_DIR_NAME = "POSTAL Brain Damaged"
 DATA_NAME = "POSTAL Brain Damaged_Data"
 GAME_EXE = "POSTAL Brain Damaged.exe"
@@ -319,6 +319,99 @@ def fix_preset_materials(env, font_atlas):
             print("  материал %s: атлас и высота обновлены" % m.m_Name)
     return fixed
 
+# ---------- русские текстуры ----------
+# Накладки (texgen/out/NNNN.json + PNG) вклеиваются в текстуры игры. Кодируем/декодируем сами
+# (texture2ddecoder / etcpak), без UnityPy.export — он тянет fmod.dll, которой нет в exe.
+TEX_BPP = {3: 3, 4: 4}                 # RGB24, RGBA32: байт на пиксель
+TEX_BLOCK = {10: 8, 12: 16, 25: 16}    # DXT1, DXT5, BC7: байт на блок 4x4
+
+def load_tex_kits():
+    """(имя, ширина, высота) -> {"rects": [(x, y, PIL RGBA)], "files": [...]}"""
+    from PIL import Image
+    kits = {}
+    d = res_path(os.path.join("texgen", "out"))
+    if not os.path.isdir(d): return kits
+    for f in sorted(os.listdir(d)):
+        if not f.endswith(".json"): continue
+        k = json.load(open(os.path.join(d, f), encoding="utf8"))
+        rects = [(r["x"], r["y"], Image.open(os.path.join(d, r["png"])).convert("RGBA")) for r in k["rects"]]
+        kits[(k["name"], k["width"], k["height"])] = {"rects": rects, "files": k.get("files", []), "idx": k["idx"]}
+    return kits
+
+def tex_level_size(fmt, w, h):
+    if fmt in TEX_BPP: return w * h * TEX_BPP[fmt]
+    return max(1, (w + 3) // 4) * max(1, (h + 3) // 4) * TEX_BLOCK[fmt]
+
+def tex_decode(fmt, data, w, h):
+    """Первый мип-уровень -> PIL RGBA, строки сверху вниз."""
+    from PIL import Image
+    if fmt == 3: img = Image.frombytes("RGB", (w, h), data[:w * h * 3]).convert("RGBA")
+    elif fmt == 4: img = Image.frombytes("RGBA", (w, h), data[:w * h * 4])
+    else:
+        import texture2ddecoder
+        dec = {10: texture2ddecoder.decode_bc1, 12: texture2ddecoder.decode_bc3, 25: texture2ddecoder.decode_bc7}[fmt]
+        img = Image.frombytes("RGBA", (w, h), dec(data[:tex_level_size(fmt, w, h)], w, h), "raw", "BGRA")
+    return img.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+
+def tex_encode(fmt, img, mips):
+    """PIL RGBA (сверху вниз) -> данные текстуры со всеми мип-уровнями."""
+    from PIL import Image
+    out = b""; w, h = img.size; cur = img
+    for lvl in range(mips):
+        lw, lh = max(1, w >> lvl), max(1, h >> lvl)
+        if lvl: cur = img.resize((lw, lh), Image.Resampling.BOX)
+        src = cur.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+        if fmt == 3: out += src.convert("RGB").tobytes()
+        elif fmt == 4: out += src.tobytes()
+        else:
+            import etcpak
+            pw, ph = ((lw + 3) // 4) * 4, ((lh + 3) // 4) * 4
+            if (pw, ph) != (lw, lh):
+                pad = Image.new("RGBA", (pw, ph)); pad.paste(src, (0, 0)); src = pad
+            raw = src.tobytes("raw", "RGBA")
+            if fmt == 10: out += etcpak.compress_bc1(raw, pw, ph)
+            elif fmt == 12: out += etcpak.compress_bc3(raw, pw, ph)
+            else: out += etcpak.compress_bc7(raw, pw, ph, None)
+    return out
+
+def apply_tex_kit(tex, kit):
+    """Вклеивает накладки в Texture2D. True — текстура изменена, False — уже была переведена, None — не смог."""
+    from PIL import ImageChops, ImageStat
+    fmt, w, h = int(tex.m_TextureFormat), tex.m_Width, tex.m_Height
+    if fmt not in TEX_BPP and fmt not in TEX_BLOCK:
+        print("  ВНИМАНИЕ: текстура %s в формате %s — не поддерживается" % (tex.m_Name, fmt)); return None
+    mips = int(getattr(tex, "m_MipCount", 1) or 1)
+    data = bytes(tex.get_image_data())
+    img = tex_decode(fmt, data, w, h)
+    # уже применено? Для блочных форматов кодируем накладку тем же кодеком и сравниваем целые блоки 4x4
+    # внутри неё — сжатие детерминировано, поэтому повторный запуск не пересжимает текстуру снова.
+    def mean_diff(a, b):
+        return sum(ImageStat.Stat(ImageChops.difference(a, b)).mean) / 4
+    applied = bool(kit["rects"])
+    for x, y, part in kit["rects"]:
+        pw, ph = part.size
+        if fmt in TEX_BLOCK and h % 4 == 0:
+            x0, y0 = (x + 3) // 4 * 4, (y + 3) // 4 * 4
+            x1, y1 = (x + pw) // 4 * 4, (y + ph) // 4 * 4
+            if x1 > x0 and y1 > y0:
+                sub = part.crop((x0 - x, y0 - y, x1 - x, y1 - y))
+                ref = tex_decode(fmt, tex_encode(fmt, sub, 1), x1 - x0, y1 - y0)
+                if mean_diff(img.crop((x0, y0, x1, y1)), ref) > 0.5: applied = False
+                continue
+        if mean_diff(img.crop((x, y, x + pw, y + ph)), part) > 1.0: applied = False
+    if applied: return False
+    for x, y, part in kit["rects"]:
+        img.paste(part, (x, y))
+    new = tex_encode(fmt, img, mips)
+    if len(new) != len(data) and len(new) != tex.m_CompleteImageSize:
+        print("  ВНИМАНИЕ: %s: размер данных %d != %d — пропускаю" % (tex.m_Name, len(new), len(data))); return None
+    tex.image_data = new
+    tex.m_CompleteImageSize = len(new)
+    if tex.m_StreamData is not None:
+        tex.m_StreamData.path = ""; tex.m_StreamData.offset = 0; tex.m_StreamData.size = 0
+    tex.save()
+    return True
+
 def live_bundles(data_dir):
     """Бандлы, которые реально грузит игра (по catalog.json)."""
     try:
@@ -341,23 +434,32 @@ class Patcher:
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             shutil.copy2(path, dst)
 
-    def patch_file(self, rel, ru, is_bundle, kits=None):
+    def patch_file(self, rel, ru, is_bundle, kits=None, tex_kits=None):
         import UnityPy
         from UnityPy.streams import EndianBinaryReader
         path = os.path.join(self.data, rel)
         if not os.path.exists(path): return 0
         with open(path, 'rb') as fh: raw = fh.read()
+        h_in = hashlib.sha1(raw).hexdigest()
         env = UnityPy.load(raw)      # из памяти, чтобы Windows дала заменить файл
         del raw
         res_fh = None
-        if kits and not is_bundle and os.path.exists(path + ".resS"):
-            # пиксели атласов лежат в .resS (его не меняем, поэтому читаем прямо из файла)
+        if (kits or tex_kits) and not is_bundle and os.path.exists(path + ".resS"):
+            # пиксели текстур лежат в .resS (его не меняем, поэтому читаем прямо из файла)
             res_fh = open(path + ".resS", "rb")
             env.register_cab(os.path.basename(path) + ".resS", EndianBinaryReader(res_fh, endian="<"))
         changed = already = fonts = 0
         font_atlas = {}
         try:
             for o in env.objects:
+                if tex_kits and o.type.name == "Texture2D":
+                    t = o.read()
+                    kit = tex_kits.get((t.m_Name, t.m_Width, t.m_Height))
+                    if kit:
+                        r = apply_tex_kit(t, kit)
+                        if r: changed += 1; print("  текстура %s: переведена" % t.m_Name)
+                        elif r is False: already += 1
+                    continue
                 if o.type.name != "MonoBehaviour": continue
                 d = o.get_raw_data()
                 nd, was = patch_record(d, ru)
@@ -381,18 +483,35 @@ class Patcher:
                 changed += fix_preset_materials(env, font_atlas)
             name = os.path.basename(rel)
             if changed:
-                self.backup(path, fresh=(already == 0))
+                # оригинал (например, после обновления игры) — только если в файле нет наших правок
+                # и это не тот файл, который мы сами записали в прошлый раз
+                state = self.load_state()
+                self.backup(path, fresh=(already == 0 and state.get(rel) != h_in))
                 tmp = path + ".ru_tmp"
+                out = env.file.save(packer="original") if is_bundle else env.file.save()
                 with open(tmp, "wb") as f:
-                    f.write(env.file.save(packer="original") if is_bundle else env.file.save())
+                    f.write(out)
+                state[rel] = hashlib.sha1(out).hexdigest()
+                del out
         finally:
             if res_fh: res_fh.close()
         if not changed:
             print("  %s: уже переведён" % name if already else "  %s: нечего менять" % name); return 0
         with open(tmp, 'rb') as fh: UnityPy.load(fh.read())   # проверка, что файл читается
         os.replace(tmp, path)
+        self.save_state(state)
         print("  %s: заменено записей: %d" % (name, changed))
         return changed
+
+    def load_state(self):
+        try:
+            return json.load(open(os.path.join(self.backup_dir, "_state.json"), encoding="utf8"))
+        except Exception:
+            return {}
+
+    def save_state(self, state):
+        os.makedirs(self.backup_dir, exist_ok=True)
+        json.dump(state, open(os.path.join(self.backup_dir, "_state.json"), "w", encoding="utf8"), indent=1)
 
     def fix_catalog(self):
         """Обнуляем проверку CRC бандлов в catalog.json, иначе изменённые бандлы не загрузятся."""
@@ -422,15 +541,24 @@ class Patcher:
         t0 = time.time()
         total = 0
         kits = load_font_kits()
+        tex = load_tex_kits()
+        if tex: print("Русских текстур: %d" % len(tex))
         live = live_bundles(self.data)
-        total += self.patch_file("resources.assets", ru, False)
-        total += self.patch_file("sharedassets0.assets", ru, False, kits)
+        total += self.patch_file("resources.assets", ru, False, None, tex)
+        total += self.patch_file("sharedassets0.assets", ru, False, kits, tex)
+        # остальные sharedassetsN — только те, где лежат наши текстуры (по данным сборки накладок)
+        extra = sorted({f for k in tex.values() for f in k["files"]
+                        if re.match(r"sharedassets\d+\.assets$", f) and f != "sharedassets0.assets"},
+                       key=lambda x: int(re.findall(r"\d+", x)[0]))
+        for f in extra:
+            total += self.patch_file(f, {}, False, None, tex)
         aa = os.path.join(self.data, AA)
         bundles = sorted(f for f in os.listdir(aa) if f.startswith("defaultlocalgroup") and f.endswith(".bundle")) if os.path.isdir(aa) else []
         if bundles: self.fix_catalog()
         for f in bundles:
-            # шрифты меняем только в бандлах, которые игра реально грузит (остальные — остатки старых сборок)
-            total += self.patch_file(os.path.join(AA, f), ru, True, kits if (live is None or f in live) else None)
+            # шрифты и текстуры меняем только в бандлах, которые игра реально грузит (остальные — остатки старых сборок)
+            is_live = live is None or f in live
+            total += self.patch_file(os.path.join(AA, f), ru, True, kits if is_live else None, tex if is_live else None)
         print("Готово за %.0f с. В игре: Настройки -> Язык -> «Русский»." % (time.time() - t0))
 
     def restore(self):
@@ -438,6 +566,7 @@ class Patcher:
             print("Резервных копий нет. Верни оригинал через Steam: «Свойства -> Установленные файлы -> Проверить целостность»."); return
         for root, _, files in os.walk(self.backup_dir):
             for f in files:
+                if f == "_state.json": continue
                 src = os.path.join(root, f); rel = os.path.relpath(src, self.backup_dir)
                 shutil.copy2(src, os.path.join(self.data, rel)); print("  восстановлено:", rel)
         shutil.rmtree(self.backup_dir, ignore_errors=True)
