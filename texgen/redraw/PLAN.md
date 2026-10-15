@@ -31,12 +31,14 @@ DXT1/DXT5/BC7/RGB24/RGBA32 textures. Hence: same size, untouched pixels byte-ide
 ## Hard technical constraints — enforced by code
 1. Output PNG, lossless, **exact same pixel size and mode** as the original (RGB stays RGB, RGBA stays RGBA).
 2. **Only allowed regions change.** Every pixel outside the union of the texture's allowed regions is byte-identical to
-   the original. Alpha of RGBA textures never changes (unless a spec sets `edit_alpha = true` on an op; default false).
+   the original. Alpha of RGBA textures never changes (no alpha-editing feature at all).
 3. Orientation per spec: rotation in 90° steps plus optional free angle, horizontal mirror, vertical flip, or a 4-point
    quad (perspective) for skewed screens.
 4. Pairs must match: texture + emissive `_E` twin, intact/destroyed variants, same word in different files. Text/asset
-   geometry of a group is rendered **once** in a shared layout space and mapped into each member (per-member
-   scale/offset and per-member style), so glyph shapes and positions are identical by construction.
+   geometry of a group is rendered **once** in a shared layout space and mapped into each member by that member's
+   geometric transform (scale, 90°-step rotation, reflection, offset) with per-member style, so glyph shapes are
+   identical by construction. A texture may belong to several groups (atlas `0053` has STOP with `1649`, WET FLOOR with
+   `1633` — rotated in 0053, mirrored in 1633 — and CATE/КОТЭ with `0438`, `1207`).
 5. Never overwrite originals. Never write into `ГОТОВО` except via the explicit `deliver` command.
 6. Determinism: same inputs + spec → byte-identical output (fixed RNG seeds, no time-dependent PNG chunks).
 
@@ -45,28 +47,64 @@ One **ordered** op array per texture; ops run in array order; later ops see earl
 
 ```toml
 [[texture]]
-id = "0265"                         # 4-digit prefix; file resolved by prefix across source subfolders
-  [[texture.op]]
-  type = "erase"; id = "word"        # op ids unique within a texture
-  region = { box = [257, 273, 464, 306] }   # or poly = [[x,y],...]; region is also the allowed area
-  mask = { kind = "saturation", min = 20, grow = 1, min_size = 3 }
-  method = "untint"                  # untint | pullpush | flat | clone
-  core = { kind = "saturation", min = 35 }  # untint: pixels used to estimate paint colour
-  [[texture.op]]
-  type = "text"; paint_from = "word" # tint ratio / auto colour from that EARLIER erase op (validation error otherwise)
-  text = "СЕКТОР"                    # "\n" for line breaks
-  font = "Tektur.ttf"; axes = { wght = 450 }   # or variation = "Bold Condensed"
-  fit = "fill_box"                   # fill_box | fit | fixed
-  box = [260, 276, 461, 303]
-  blend = "tint"                     # tint | normal | multiply
-  colour = "auto"                    # auto (from paint_from) or [r,g,b(,a)]
+id = "0265"                          # 4-digit prefix; file resolved by prefix across source subfolders
 
-[[group]]                            # linked layout, e.g. 0100 (_E, 1024) = 8 × 1841 (128)
-id = "fuckoff"; space = [1024, 1024]
-members = [ { id = "0100", scale = 1.0, offset = [0,0] },
-            { id = "1841", scale = 0.125, offset = [0,0], style = { stroke = 1, stroke_colour = [0,0,0] } } ]
-  [[group.op]]                       # ops in layout space, mapped into every member
-  ...
+[[texture.op]]
+type = "erase"
+id = "word"                          # op ids unique within a texture
+region = { box = [257, 273, 464, 306] }    # or poly = [[x,y],...]; region is also the allowed area
+mask = { kind = "saturation", min = 20, grow = 1, min_size = 3 }
+method = "untint"                    # untint | pullpush | flat | clone
+core = { kind = "saturation", min = 35 }   # untint: pixels used to estimate paint colour
+
+[[texture.op]]
+type = "text"
+paint_from = "word"                  # tint ratio / auto colour from that EARLIER erase op (validation error otherwise)
+text = "СЕКТОР"                      # "\n" for line breaks
+font = "Tektur.ttf"
+axes = { wght = 450 }                # or variation = "Bold Condensed"
+fit = "fill_box"                     # fill_box | fit | fixed
+box = [260, 276, 461, 303]
+blend = "tint"                       # tint | normal | multiply
+colour = "auto"                      # auto (from paint_from) or [r,g,b(,a)]
+
+# Linked layout: 0100 (_E, 1024) = 8 x 1841 (128).
+[[group]]
+id = "fuckoff"
+space = [1024, 1024]
+
+[[group.member]]
+id = "0100"
+transform = { scale = 1.0, rot = 0, mirror = false, offset = [0, 0] }
+
+[[group.member]]
+id = "1841"
+transform = { scale = 0.125, rot = 0, mirror = false, offset = [0, 0] }
+style = { stroke = 1, stroke_colour = [0, 0, 0] }
+
+[[group.op]]                         # ops in layout space, mapped into every member
+type = "text"
+text = "Кнопка\n«Иди на хрен»"
+font = "comicbd.ttf"
+fit = "fit"
+box = [64, 240, 904, 741]
+blend = "normal"
+colour = [255, 0, 0]
+
+# Each member texture places the group's ops explicitly in its own ordered op list:
+[[texture]]
+id = "1841"
+
+[[texture.op]]
+type = "erase"
+id = "old"
+region = { box = [4, 26, 118, 97] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 110, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "use_group"                   # group ops are applied exactly here, mapped by this member's transform
+group = "fuckoff"
 ```
 
 Capabilities:
@@ -88,26 +126,39 @@ Capabilities:
   source `crop` (one block of a lettering sheet), placed into box/quad with fit/fill; optional recolour (keep alpha; set
   or multiply RGB); optional soft key-out of a solid background colour (colour-difference matte, not binary threshold);
   same transform/blend options as text. Asset paths relative to `texgen/redraw/assets/` or absolute.
-- **Groups**: layout space + members (scale, offset, style overrides). Layers rendered once in layout space and resampled
-  per member; positions snap so scale mapping is exact (pad layer to a multiple of 1/scale). Erase regions mapped by the
-  same transform unless a member overrides them. Member-only ops allowed (`[[group.member_op]]` with `member = id`).
+- **Groups**: layout space + members, each with `transform` = scale, `rot` (0/90/180/270), `mirror`, `offset`, applied in
+  this fixed order to layout coordinates: mirror (about the layout's vertical centre line) → rotate (about layout origin,
+  then re-based so the rotated layout space starts at 0,0) → scale → translate by offset. The same transform maps the
+  canonical layer image and all group geometry (boxes/polys) into the member. Layers are rendered once in layout space
+  and resampled per member; positions snap so mapping is exact (pad layer to a multiple of 1/scale); 90°-step
+  rotation/reflection of the layer is lossless (transpose), then scaled. Per-member `style` overrides (colours,
+  stroke/shadow on or off) restyle the same coverage. A texture may be a member of any number of groups; a member must
+  contain exactly one `type = "use_group"` op per group it belongs to (validation error otherwise) — group ops run at
+  that point of the texture's ordered op list, so the combined order is fully deterministic and explicit.
+  Group erase ops are allowed and mapped the same way. `paint_from` inside group ops may name a group erase op only.
 
 ## CLI — launcher `py -3.12 texgen/redraw.py <cmd>` from the repo root
 Launcher inserts the repo root into `sys.path`; no installation; no `-I` (isolated mode drops script dir and env
 encoding). Force UTF-8 stdout. Paths with Cyrillic and spaces must work on Windows.
-- **Group closure**: any selection (`--only`, `check`, `deliver`) expands to all members of every group containing a
-  selected id; groups are built/checked/delivered as a unit.
+- **Roots**: `_ru_tools` root resolved as: `--tools-root` flag → env `PBD_RU_TOOLS` → `<repo>/..` (the normal checkout
+  `_ru_tools\repo`). Source root = `<tools>/Текстуры_для_перевода`, deliver root = `<tools>/Текстуры_для_перевода/ГОТОВО`,
+  both overridable (`--source-root`, `--deliver-root`). The worktree `D:\Work\postal-ru-redraw-wt` needs the env/flag;
+  the error message for a missing root names all three options.
+- **Group closure**: any selection (`--only`, `check`, `deliver`) expands transitively over group membership (texture →
+  all its groups → all their members → their other groups …); the closure is built/checked/delivered as a unit.
 - `build <spec…> [--only ID…]` → `texgen/redraw/out/<original name>.png`, `texgen/redraw/preview/<id>.png` (original |
   result zoomed on the union of regions, nearest-neighbour, plus full-texture thumbnail), and `texgen/redraw/out/manifest.json`
-  (`schema = 1`): per texture — spec path + sha256, texture id, group id + member mapping, source path + sha256,
-  asset/font sha256s, allowed-region geometry exactly as applied (after group mapping), output sha256, changed/allowed
-  pixel counts, warnings ("ink touches region edge", "squeezed below 0.75"). Groups: sha256 of the canonical fill-only
-  coverage layer saved as `out/layers/<group>.png` and each member mapping.
+  (`schema = 1`): per texture — spec paths + sha256, texture id, **list** of group memberships (group id, member transform,
+  position of its `use_group` op), source path + sha256, every dependency (asset and font files: resolved path + sha256),
+  allowed-region geometry exactly as applied (after group mapping), output sha256, changed/allowed pixel counts, warnings
+  ("ink touches region edge", "squeezed below 0.75"). Per group: sha256 of the canonical fill-only coverage layer saved
+  as `out/layers/<group>.png`.
 - `check [--only ID…]` → **independent** verification: re-reads specs named in the manifest and compares sha256;
-  rasterises allowed masks itself from spec geometry (own small rasteriser in `check.py`, not engine mask code);
-  re-reads source and output and verifies size/mode equal, alpha equal, zero changed pixels outside allowed, output
-  sha256 = manifest. Groups: canonical layer hash = manifest; mapped canonical ink lies inside each member's allowed mask.
-  Non-zero exit on any violation.
+  re-hashes the source and every recorded dependency (asset/font) at its recorded path — missing or changed → fail;
+  rasterises allowed masks itself from spec geometry and group transforms (own small rasteriser + transform code in
+  `check.py`, not engine code); re-reads source and output and verifies size/mode equal, alpha equal, zero changed pixels
+  outside allowed, output sha256 = manifest. Groups: canonical layer hash = manifest; canonical ink mapped by each
+  member's transform lies inside that member's allowed mask. Non-zero exit on any violation.
 - `deliver ID… | --all` → group closure, then **fresh validation at delivery time** of the exact bytes to copy (same checks
   as `check`, no reliance on earlier records). Preflight all destination conflicts for the whole selection before copying:
   an existing different file needs `--replace`; identical → skip. Copy via temp + atomic rename. Append
@@ -150,17 +201,27 @@ Tests (synthetic):
 4. `fill_box`: ink bbox equals box within ±1 px (rot 0 and 270).
 5. Orientation: rot=270 reads top→bottom (first glyph nearer top); `mirror` flips left-right.
 6. Group mapping 1024 → 128 (scale 1/8): member coverage equals 8× box-downsample of canonical within tolerance; positions exact.
-7. `check` fails (non-zero) on: out-of-region change, alpha change, size mismatch, spec edited after build.
+7. `check` fails (non-zero) on: out-of-region change, alpha change, size mismatch, spec edited after build, asset or font
+   file replaced/missing after build, source modified after build (even inside an allowed region).
 8. `deliver`: refuses overwriting a different file without `--replace`; check → modify output → deliver rejected;
    one pair member selected → both delivered; conflict on the second member aborts before the first is copied.
 9. Determinism: same spec twice → identical sha256.
 10. Spec validation: unknown key, missing font, box outside image, `paint_from` unknown/later op → clear error with texture id.
 11. Op ordering: erase → text → erase gives the order-dependent result.
 12. Launcher subprocess smoke test: `texgen/redraw.py --help` and `fonts`.
-Manual/visual (Claude, after build): `py -3.12 texgen/redraw.py build texgen/redraw/specs/exit.toml texgen/redraw/specs/walls.toml
-texgen/redraw/specs/fuckoff.toml` and `check` (exit 0) on real textures; previews show no ghosting, Russian text in the
-original's colour/position/orientation, pairs matching. Then `build_tex_overlays.py --ready <tmp dir with outputs>` runs
-and reports small areas.
+13. Group transforms: a layout mapped into member A with `rot = 90` and member B with `mirror = true` gives coverage
+    equal to the canonical layer transposed/flipped (exact for scale 1); `check` reconstructs the same mapped boxes.
+14. Shared atlas: one texture in two groups plus its own ops, with `use_group` ops at different positions → output equals
+    applying the ops in that combined order; missing or duplicate `use_group` → validation error; closure from a member of
+    one group pulls in the other group's members.
+Manual/visual (Claude, after build), from the worktree with `PBD_RU_TOOLS` set to the real `_ru_tools`:
+`py -3.12 texgen/redraw.py build texgen/redraw/specs/exit.toml texgen/redraw/specs/walls.toml texgen/redraw/specs/fuckoff.toml`
+and `check` (exit 0) on real textures; previews show no ghosting, Russian text in the original's colour/position/
+orientation, pairs matching. Overlay compatibility, never touching the release `texgen/out`:
+`py -3.12 texgen/build_tex_overlays.py --ready texgen/redraw/out --orig "<_ru_tools>/Текстуры_для_перевода"
+--index "<_ru_tools>/tex_inventory/index.json" --out <temp dir outside the repo>` → printed lines list exactly the 8
+acceptance texture names with small areas, "ошибок 0", no "ВНИМАНИЕ"; the temp dir contains `NNNN.json` for those 8 ids.
+(`build_tex_overlays.py` itself is not modified; it deletes its `--out` contents, hence the temp dir.)
 
 ## Non-goals
 Art decisions (fonts, colours, texts) — specs by Claude. Image generation — ChatGPT via imgloop, separately.
