@@ -1,0 +1,108 @@
+# CENSORED -> ЦЕНЗУРА. Four 128x64 "dicpic" plates (Trajan-like caps, Forum) and the 1889 sign (heavy spaced sans, tilted).
+
+[[texture]]
+id = "0660"
+
+[[texture.op]]
+type = "erase"
+region = { box = [6, 20, 121, 49] }
+mask = { kind = "luminance", min = 50, grow = 1 }
+method = "flat"
+colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "ЦЕНЗУРА"
+font = "Forum-Regular.ttf"
+fit = "fit"
+box = [10, 25, 116, 46]
+colour = [222, 223, 222]
+tracking = 1
+stroke = 0.5
+stroke_colour = [222, 223, 222]
+
+[[texture]]
+id = "0741"
+
+[[texture.op]]
+type = "erase"
+region = { box = [6, 22, 118, 50] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 150 }, { kind = "saturation", max = 70 } ] }
+method = "pullpush"
+grain = { ref = [0, 48, 128, 64], sigma = 1.5, gain = 0.8, seed = 3 }
+
+[[texture.op]]
+type = "text"
+text = "ЦЕНЗУРА"
+font = "Forum-Regular.ttf"
+fit = "fit"
+box = [9, 26, 114, 47]
+colour = [247, 239, 247]
+tracking = 1
+stroke = 0.5
+stroke_colour = [247, 239, 247]
+shadow = { dx = 1, dy = 1, blur = 0.6, colour = [20, 0, 20], opacity = 0.7 }
+
+[[texture]]
+id = "0808"
+
+[[texture.op]]
+type = "erase"
+region = { box = [9, 22, 121, 49] }
+mask = { kind = "all", grow = 2, of = [ { kind = "luminance", min = 205 }, { kind = "saturation", max = 45 } ] }
+method = "pullpush"
+grain = { ref = [0, 48, 128, 64], sigma = 1.5, gain = 1.0, seed = 4 }
+
+[[texture.op]]
+type = "text"
+text = "ЦЕНЗУРА"
+font = "Forum-Regular.ttf"
+fit = "fit"
+box = [12, 25, 117, 46]
+colour = [247, 247, 247]
+tracking = 1
+stroke = 0.5
+stroke_colour = [247, 247, 247]
+shadow = { dx = 1, dy = 1, blur = 0.8, colour = [40, 70, 95], opacity = 0.8 }
+
+[[texture]]
+id = "1284"
+
+[[texture.op]]
+type = "erase"
+region = { box = [7, 21, 120, 49] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 170 }, { kind = "saturation", max = 80 } ] }
+method = "pullpush"
+grain = { ref = [0, 48, 128, 64], sigma = 1.5, gain = 0.9, seed = 5 }
+
+[[texture.op]]
+type = "text"
+text = "ЦЕНЗУРА"
+font = "Forum-Regular.ttf"
+fit = "fit"
+box = [11, 25, 116, 46]
+colour = [247, 243, 239]
+tracking = 1
+stroke = 0.5
+stroke_colour = [247, 243, 239]
+shadow = { dx = 1, dy = 1, blur = 0.6, colour = [40, 8, 0], opacity = 0.7 }
+
+[[texture]]
+id = "1889"
+
+[[texture.op]]
+type = "erase"
+region = { box = [110, 150, 326, 246] }
+mask = { kind = "all", grow = 2, of = [ { kind = "luminance", min = 60 }, { kind = "saturation", max = 40 } ] }
+method = "flat"
+colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "ЦЕНЗУРА"
+font = "ariblk.ttf"
+fit = "fit"
+box = [114, 152, 322, 244]
+angle = 15
+tracking = 6
+colour = [255, 255, 255]

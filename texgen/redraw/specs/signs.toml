@@ -1,0 +1,101 @@
+# Simple signs: TOILETS / FREE (1884), WEATHER BALLOON tape (1079), STOP (1649 + its 1:1 copy in atlas 0053 at y+512).
+
+[[texture]]
+id = "1884"
+
+[[texture.op]]
+type = "erase"
+region = { box = [29, 474, 179, 504] }
+mask = { kind = "luminance", max = 112, grow = 1 }
+method = "pullpush"
+grain = { ref = [12, 504, 200, 511], sigma = 1.5, gain = 1.0, seed = 6 }
+
+[[texture.op]]
+type = "text"
+text = "ТУАЛЕТ"
+font = "bahnschrift.ttf"
+variation = "Bold"
+fit = "fit"
+box = [34, 479, 174, 499]
+colour = [72, 73, 72]
+tracking = 2
+stroke = 1
+stroke_colour = [42, 43, 42]
+shadow = { dx = 1, dy = 1, blur = 0.5, colour = [175, 176, 175], opacity = 0.5 }
+
+[[texture.op]]
+type = "erase"
+region = { box = [133, 334, 170, 352] }
+mask = { kind = "luminance", max = 125, grow = 1 }
+method = "pullpush"
+grain = { ref = [140, 352, 170, 358], sigma = 1.2, gain = 1.0, seed = 7 }
+
+[[texture.op]]
+type = "text"
+text = "БЕСПЛАТНО"
+font = "GOTHICB.TTF"
+fit = "fit"
+sx_min = 0.5
+box = [135, 337, 168, 349]
+colour = [90, 93, 90]
+
+[[texture]]
+id = "1079"
+
+[[texture.op]]
+type = "erase"
+region = { box = [3, 119, 66, 127] }
+mask = { kind = "luminance", max = 95, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "МЕТЕОЗОНД"
+font = "PressStart2P-Regular.ttf"
+fit = "fit"
+sx_min = 0.6
+box = [5, 120, 63, 126]
+colour = [22, 24, 14]
+
+[[group]]
+id = "stop"
+space = [256, 256]
+
+[[group.member]]
+id = "1649"
+transform = { scale = 1, offset = [0, 0] }
+
+[[group.member]]
+id = "0053"
+transform = { scale = 1, offset = [0, 512] }
+
+[[group.op]]
+type = "erase"
+id = "stop"
+region = { box = [139, 40, 242, 89] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 160 }, { kind = "saturation", max = 110 } ] }
+method = "pullpush"
+grain = { ref = [150, 95, 230, 110], sigma = 1.5, gain = 1.0, seed = 8 }
+
+[[group.op]]
+type = "text"
+text = "СТОП"
+font = "bahnschrift.ttf"
+variation = "SemiBold Condensed"
+fit = "fit"
+box = [147, 47, 235, 83]
+colour = [231, 215, 206]
+
+[[texture]]
+id = "1649"
+
+[[texture.op]]
+type = "use_group"
+group = "stop"
+
+[[texture]]
+id = "0053"
+
+[[texture.op]]
+type = "use_group"
+group = "stop"
