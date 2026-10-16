@@ -283,14 +283,15 @@ New erase method `method = "patch"` (all other erase semantics unchanged: only t
   distance from the known boundary, Wexler style); a few EM rounds per scale. Unknown pixels are initialised from the
   coarser scale (finest initial guess may use pullpush).
 - Parameters (all optional): `patch = 7` (odd, 3–15, patch side in pixels at the finest scale), `iterations = 5` (1–20),
-  `em = 3` (1–10), `seed = 0`, `source = [[x0,y0,x1,y1], …]` (boxes where source patch centres may lie; default: the
-  op region dilated by `margin = 48` px clipped to the image), `exclude = [[…], …]` (boxes never used as source, e.g. faces).
+  `em = 3` (1–10), `seed = 0`, `source = [[x0,y0,x1,y1], …]` (areas of permitted donor pixels; default: the op region
+  dilated by `margin = 48` px clipped to the image), `exclude = [[…], …]` (areas whose pixels are never donated, e.g. faces).
   Footprint semantics (B1): a donor patch is valid only if its WHOLE footprint (every pixel) lies inside the image, inside
   the union of `source` boxes, outside every `exclude` box, and outside the erase mask (known pixels). Centre-only
   eligibility is not used anywhere.
-- Read/write bounds (B2): pixels are READ from the image in full-resolution coordinates (donor footprints and target
-  patches may extend up to the patch radius plus pyramid-filter support beyond the region/source boxes, clipped only at
-  the real image edges); pixels are WRITTEN only where the op's mask is set.
+- Read/write bounds (B2): donor footprints are always entirely inside the source union (B1). Reading context is separate
+  from donor eligibility: TARGET patches (those overlapping the hole) and pyramid-filter support may read known pixels up
+  to the patch radius plus filter support beyond the region box, clipped only at the real image edges, and the read
+  window(s) must include every donor footprint in full; pixels are WRITTEN only where the op's mask is set.
 - Pyramid levels (B3): the same patch side is used at every level. Masks propagate conservatively: a coarse pixel is
   KNOWN only if all of its fine children are known (so masked lettering never leaks into coarse donors); a coarse pixel
   is EXCLUDED/outside-source if any child is. Donor validity is recomputed at each level from those propagated masks.
@@ -317,8 +318,10 @@ Verification additions (same proof command):
 (c) source/exclude respected (footprint semantics): a hole filled only from a uniform-colour source box (whole footprints
     inside it) yields only that colour (within 1); an exclusion-edge case where a patch centred just outside an excluded
     face would overlap it is never used (no excluded colour appears in the fill);
-(c2) narrow source box near the read-window edge: a donor whose footprint needs pixels beyond the region/source boxes
-    is sampled correctly (B2 regression);
+(c2) B2 regressions: (i) a source box just large enough for one full footprint, placed far from the region, is sampled
+    correctly (its full footprint is read even though it lies outside the region's read window); (ii) a hole touching
+    the region edge uses known context pixels within the patch radius outside the region box for target patches;
+    (iii) a source union that cannot contain any complete footprint is rejected with a SpecError;
 (c3) coarse-level fallback: valid finest-scale donors but none at the first proposed coarse level → completes without error
     (B3 regression);
 (d) only mask pixels change; RGBA alpha untouched;
