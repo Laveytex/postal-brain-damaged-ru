@@ -1,0 +1,51 @@
+# 0629_Hospital_Blood: blood lettering on white -> Russian (Rubik Wet Paint, dark red, multiply on white).
+# The painted eye (x >= 413) and the splatters around stay untouched.
+
+[[texture]]
+id = "0629"
+
+[[texture.op]]
+type = "erase"
+id = "shoot"
+region = { box = [290, 294, 409, 351] }
+mask = { kind = "luminance", max = 235, grow = 1 }
+method = "flat"
+colour = [255, 255, 255]
+
+[[texture.op]]
+type = "erase"
+id = "look"
+region = { box = [178, 432, 281, 481] }
+mask = { kind = "luminance", max = 235, grow = 1 }
+method = "flat"
+colour = [255, 255, 255]
+
+[[texture.op]]
+type = "text"
+text = "СТРЕЛЯЙ ИМ\nВ ГЛАЗА"
+font = "Unutterable-Regular.ttf"
+fit = "fit"
+sx_min = 0.7
+spacing = 1.15
+box = [292, 296, 408, 349]
+colour = [128, 14, 10]
+blend = "multiply"
+jitter = { rotate = 11.0, shift = 0.10, scale = 0.14, seed = 21 }
+drips = { count = 1.0, length = [0.15, 0.6], width = [0.12, 0.2], seed = 4, colour = "fill" }
+stroke = 0.9
+stroke_colour = [118, 13, 9]
+
+[[texture.op]]
+type = "text"
+text = "НЕ\nОГЛЯДЫВАЙСЯ"
+font = "Unutterable-Regular.ttf"
+fit = "fit"
+sx_min = 0.7
+spacing = 1.15
+box = [180, 434, 279, 480]
+colour = [110, 12, 8]
+blend = "multiply"
+jitter = { rotate = 11.0, shift = 0.10, scale = 0.14, seed = 21 }
+drips = { count = 1.0, length = [0.15, 0.6], width = [0.12, 0.2], seed = 4, colour = "fill" }
+stroke = 0.9
+stroke_colour = [118, 13, 9]
