@@ -1,0 +1,47 @@
+# Small plates: 0084 LEAP OF HAY (black on yellow), 1862 DADDY'S ROOM / DO NOT ENTER! (mirrored, 128 px).
+# 1862 is simplified for readability at 128 px (ТЗ allows): КОМНАТА ПАПЫ / НЕ ВХОДИТЬ!
+
+[[texture]]
+id = "0084"
+
+[[texture.op]]
+type = "erase"
+region = { box = [55, 148, 115, 171] }
+mask = { kind = "luminance", max = 90, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ПРЫЖОК"
+font = "impact.ttf"
+fit = "fit"
+box = [57, 148, 100, 159]
+colour = [24, 20, 12]
+
+[[texture.op]]
+type = "text"
+text = "В СЕНО"
+font = "impact.ttf"
+fit = "fit"
+box = [72, 160, 114, 171]
+colour = [24, 20, 12]
+
+[[texture]]
+id = "1862"
+
+[[texture.op]]
+type = "erase"
+region = { box = [5, 73, 59, 88] }
+mask = { kind = "luminance", max = 110, grow = 1 }
+method = "flat"
+colour = [222, 159, 4]
+
+[[texture.op]]
+type = "text"
+text = "КОМНАТА ПАПЫ\nНЕ ВХОДИТЬ!"
+font = "ARIALNB.TTF"
+fit = "fit"
+spacing = 0.85
+box = [6, 74, 58, 87]
+mirror = true
+colour = [26, 22, 14]

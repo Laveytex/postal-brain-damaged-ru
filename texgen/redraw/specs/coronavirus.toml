@@ -1,0 +1,108 @@
+# CoronavirusDen monitor screens (1024): white-blue monospace text with a pink fringe on a blue screen.
+# Small icon captions (shit happens!, Operation sucks!, Hello world?) are ~5 px and kept (ТЗ allows).
+
+[[texture]]
+id = "0781"
+
+[[texture.op]]
+type = "erase"
+region = { box = [148, 810, 324, 896] }
+mask = { kind = "luminance", min = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [148, 900, 324, 915], sigma = 1.5, gain = 1.0, seed = 781 }
+
+[[texture.op]]
+type = "text"
+text = "Всё ещё\nпытаешься, а?\nУдачи xD"
+font = "consolab.ttf"
+fit = "fit"
+align = "left"
+spacing = 1.05
+box = [151, 812, 321, 893]
+colour = [200, 217, 245]
+shadow = { dx = -1, dy = 0, blur = 0, colour = [232, 120, 232], opacity = 0.55 }
+
+[[texture]]
+id = "0896"
+
+[[texture.op]]
+type = "erase"
+region = { box = [148, 810, 282, 870] }
+mask = { kind = "luminance", min = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [148, 900, 282, 915], sigma = 1.5, gain = 1.0, seed = 896 }
+
+[[texture.op]]
+type = "text"
+text = "Серьёзно.\nХватит."
+font = "consolab.ttf"
+fit = "fit"
+align = "left"
+spacing = 1.05
+box = [151, 812, 279, 868]
+colour = [200, 217, 245]
+shadow = { dx = -1, dy = 0, blur = 0, colour = [232, 120, 232], opacity = 0.55 }
+
+[[texture]]
+id = "1310"
+
+[[texture.op]]
+type = "erase"
+region = { box = [148, 810, 325, 870] }
+mask = { kind = "luminance", min = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [148, 900, 325, 915], sigma = 1.5, gain = 1.0, seed = 1310 }
+
+[[texture.op]]
+type = "text"
+text = "Не в этот раз,\nдружок :)"
+font = "consolab.ttf"
+fit = "fit"
+align = "left"
+spacing = 1.05
+box = [151, 812, 322, 868]
+colour = [200, 217, 245]
+shadow = { dx = -1, dy = 0, blur = 0, colour = [232, 120, 232], opacity = 0.55 }
+
+[[texture]]
+id = "1522"
+
+[[texture.op]]
+type = "erase"
+region = { box = [148, 810, 337, 866] }
+mask = { kind = "luminance", min = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [148, 900, 337, 915], sigma = 1.5, gain = 1.0, seed = 1522 }
+
+[[texture.op]]
+type = "text"
+text = "Тебе лучше этого\nне видеть!"
+font = "consolab.ttf"
+fit = "fit"
+align = "left"
+spacing = 1.05
+box = [151, 812, 334, 863]
+colour = [200, 217, 245]
+shadow = { dx = -1, dy = 0, blur = 0, colour = [232, 120, 232], opacity = 0.55 }
+
+[[texture]]
+id = "0829"
+
+# glitch-bar background: copy real bars from the rows above instead of smoothing
+[[texture.op]]
+type = "erase"
+region = { box = [160, 852, 356, 886] }
+mask = { kind = "luminance", min = 140, grow = 2 }
+method = "clone"
+offset = [0, -34]
+feather = 1
+
+[[texture.op]]
+type = "text"
+text = "ХВАААТИТ!!1"
+font = "consolab.ttf"
+fit = "fit"
+sx_min = 0.8
+box = [166, 855, 350, 882]
+colour = [222, 228, 246]
+shadow = { dx = -1, dy = 0, blur = 0, colour = [232, 120, 232], opacity = 0.55 }

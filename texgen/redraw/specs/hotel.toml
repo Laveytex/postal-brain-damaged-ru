@@ -1,0 +1,186 @@
+# Hotel. 0809: HOETEL -> ШЛЮХОТЕЛЬ. 1197 (BC) + 0271 (emissive) share the 1024 layout:
+# STUFF ONLY -> ТОЛЬКО ДЛЯ / ПЕРСОНАЛА, TAKE A RIDE -> ПРОКАТИСЬ (per-letter rainbow in BC, white in _E). FIGHT -> БОЙ (BC only).
+
+[[texture]]
+id = "0809"
+
+[[texture.op]]
+type = "erase"
+region = { box = [256, 590, 335, 1024] }
+mask = { kind = "all", grow = 1, of = [ { kind = "channel_dominance", channel = "b", ratio = 1.2, min = 90 }, { kind = "saturation", min = 40 } ] }
+method = "flat"
+colour = [230, 230, 230]
+
+[[texture.op]]
+type = "text"
+text = "ШЛЮХОТЕЛЬ"
+font = "BOOKOSB.TTF"
+fit = "fit"
+sx_min = 0.6
+box = [260, 595, 333, 1023]
+rot = 90
+colour = [139, 71, 240]
+
+[[group]]
+id = "hotel"
+space = [1024, 1024]
+
+[[group.member]]
+id = "1197"
+
+[[group.member]]
+id = "0271"
+style = { colour = [236, 236, 236] }
+
+# STUFF ONLY plate (white frame kept)
+[[group.op]]
+type = "erase"
+region = { box = [555, 220, 717, 257] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 120 }, { kind = "saturation", max = 70 } ] }
+method = "pullpush"
+
+[[group.op]]
+type = "text"
+text = "ТОЛЬКО ДЛЯ\nПЕРСОНАЛА"
+font = "comicbd.ttf"
+fit = "fit"
+spacing = 0.85
+box = [559, 222, 714, 255]
+colour = [232, 226, 214]
+
+# TAKE A RIDE column on a 32 px checker: copy squares from 64 px to the left (same phase); rows 855-919 have a photo
+# on the left, so they copy from 64 px above inside the already cleaned column.
+[[group.op]]
+type = "erase"
+region = { box = [955, 742, 993, 855] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", min = 70 }, { kind = "luminance", min = 60 } ] }
+method = "clone"
+offset = [-64, 0]
+feather = 1
+
+[[group.op]]
+type = "erase"
+region = { box = [955, 855, 993, 919] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", min = 70 }, { kind = "luminance", min = 60 } ] }
+method = "clone"
+offset = [0, -64]
+feather = 1
+
+[[group.op]]
+type = "erase"
+region = { box = [955, 919, 993, 1015] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", min = 70 }, { kind = "luminance", min = 60 } ] }
+method = "clone"
+offset = [-64, 0]
+feather = 1
+
+[[group.op]]
+type = "text"
+text = "П"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 746.0, 990, 775.4]
+rot = 270
+colour = [236, 28, 28]
+
+[[group.op]]
+type = "text"
+text = "Р"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 775.4, 990, 804.9]
+rot = 270
+colour = [40, 200, 220]
+
+[[group.op]]
+type = "text"
+text = "О"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 804.9, 990, 834.3]
+rot = 270
+colour = [232, 230, 40]
+
+[[group.op]]
+type = "text"
+text = "К"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 834.3, 990, 863.8]
+rot = 270
+colour = [40, 200, 50]
+
+[[group.op]]
+type = "text"
+text = "А"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 863.8, 990, 893.2]
+rot = 270
+colour = [205, 160, 40]
+
+[[group.op]]
+type = "text"
+text = "Т"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 893.2, 990, 922.7]
+rot = 270
+colour = [40, 50, 205]
+
+[[group.op]]
+type = "text"
+text = "И"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 922.7, 990, 952.1]
+rot = 270
+colour = [236, 28, 28]
+
+[[group.op]]
+type = "text"
+text = "С"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 952.1, 990, 981.6]
+rot = 270
+colour = [232, 230, 40]
+
+[[group.op]]
+type = "text"
+text = "Ь"
+font = "GOTHICB.TTF"
+fit = "fit"
+box = [958, 981.6, 990, 1011.0]
+rot = 270
+colour = [40, 200, 220]
+
+[[texture]]
+id = "1197"
+
+[[texture.op]]
+type = "use_group"
+group = "hotel"
+
+# FIGHT on the red panel (BC only)
+[[texture.op]]
+type = "erase"
+region = { box = [356, 560, 390, 626] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 95 }, { kind = "saturation", max = 135 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "БОЙ"
+font = "timesbd.ttf"
+fit = "fit"
+box = [360, 566, 386, 620]
+rot = 270
+colour = [205, 200, 200]
+
+[[texture]]
+id = "0271"
+
+[[texture.op]]
+type = "use_group"
+group = "hotel"
