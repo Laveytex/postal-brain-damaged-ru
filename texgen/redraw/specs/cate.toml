@@ -1,0 +1,173 @@
+# CATE logo -> КОТЭ. 1207 (512) is identical to the top-left 512x512 of atlas 0053 (offset 0,0).
+# Four instances: hood (normal), under the cat (mirrored), side (vertical), door (mirrored).
+# 0053 declares its use_group ops (stop, cate, …) in signs.toml.
+
+[[group]]
+id = "cate"
+space = [512, 512]
+
+[[group.member]]
+id = "1207"
+
+[[group.member]]
+id = "0053"
+
+# 1) hood, normal
+[[group.op]]
+type = "erase"
+id = "hood"
+region = { box = [131, 43, 240, 62] }
+mask = { kind = "luminance", min = 72, grow = 2 }
+method = "pullpush"
+grain = { ref = [140, 30, 230, 40], sigma = 1.2, gain = 1.0, seed = 61 }
+
+[[group.op]]
+type = "text"
+text = "КОТЭ"
+font = "Tektur.ttf"
+axes = { wght = 500 }
+fit = "fill_box"
+box = [134, 46, 236, 60]
+colour = [173, 172, 181]
+
+# 2) under the cat, mirrored
+[[group.op]]
+type = "erase"
+id = "cat"
+region = { box = [332, 104, 400, 121] }
+mask = { kind = "luminance", min = 100, grow = 2 }
+method = "pullpush"
+grain = { ref = [335, 122, 397, 130], sigma = 1.2, gain = 1.0, seed = 62 }
+
+[[group.op]]
+type = "text"
+text = "КОТЭ"
+font = "Tektur.ttf"
+axes = { wght = 500 }
+fit = "fill_box"
+box = [335, 106, 397, 118]
+mirror = true
+colour = [173, 172, 181]
+
+# 3) side, vertical: mirrored reading frame turned 270 (Э at the top, as E in the original)
+[[group.op]]
+type = "erase"
+id = "side"
+region = { box = [83, 394, 102, 471] }
+mask = { kind = "luminance", min = 100, grow = 2 }
+method = "pullpush"
+grain = { ref = [100, 400, 112, 465], sigma = 1.2, gain = 1.0, seed = 63 }
+
+[[group.op]]
+type = "text"
+text = "КОТЭ"
+font = "Tektur.ttf"
+axes = { wght = 500 }
+fit = "fill_box"
+box = [85, 397, 99, 468]
+rot = 270
+mirror = true
+colour = [173, 172, 181]
+
+# 4) door, mirrored
+[[group.op]]
+type = "erase"
+id = "door"
+region = { box = [179, 410, 270, 432] }
+mask = { kind = "luminance", min = 100, grow = 2 }
+method = "pullpush"
+grain = { ref = [182, 433, 267, 440], sigma = 1.2, gain = 1.0, seed = 64 }
+
+[[group.op]]
+type = "text"
+text = "КОТЭ"
+font = "Tektur.ttf"
+axes = { wght = 500 }
+fit = "fill_box"
+box = [182, 413, 267, 429]
+mirror = true
+colour = [173, 172, 181]
+
+[[texture]]
+id = "1207"
+
+[[texture.op]]
+type = "use_group"
+group = "cate"
+
+# --- 0438 CateBase atlas (2048): big black painted logo split over UV islands ---
+# vertical: "CA" x703-815 y513-802 and "TE" x742-852 y935-1217 (turned 270, reads top->bottom)
+# island 1: "CA" normal at x1051-1333 y1100-1209; island 2: "TE" turned 180 at x124-425 y812-930
+[[texture]]
+id = "0438"
+
+[[texture.op]]
+type = "erase"
+region = { box = [697, 507, 821, 808] }
+mask = { kind = "luminance", max = 75, grow = 2 }
+method = "pullpush"
+grain = { ref = [640, 520, 695, 800], sigma = 2.0, gain = 1.0, seed = 71 }
+
+[[texture.op]]
+type = "text"
+text = "КО"
+font = "Tektur.ttf"
+axes = { wght = 600 }
+fit = "fill_box"
+box = [703, 513, 815, 802]
+rot = 270
+colour = [24, 24, 26]
+modulate = true
+
+[[texture.op]]
+type = "erase"
+region = { box = [736, 929, 858, 1223] }
+mask = { kind = "luminance", max = 75, grow = 2 }
+method = "pullpush"
+grain = { ref = [640, 940, 735, 1210], sigma = 2.0, gain = 1.0, seed = 72 }
+
+[[texture.op]]
+type = "text"
+text = "ТЭ"
+font = "Tektur.ttf"
+axes = { wght = 600 }
+fit = "fill_box"
+box = [742, 935, 852, 1217]
+rot = 270
+colour = [24, 24, 26]
+modulate = true
+
+[[texture.op]]
+type = "erase"
+region = { box = [1045, 1094, 1339, 1215] }
+mask = { kind = "luminance", max = 75, grow = 2 }
+method = "pullpush"
+grain = { ref = [1051, 1220, 1333, 1245], sigma = 2.0, gain = 1.0, seed = 73 }
+
+[[texture.op]]
+type = "text"
+text = "КО"
+font = "Tektur.ttf"
+axes = { wght = 600 }
+fit = "fill_box"
+box = [1051, 1100, 1333, 1209]
+colour = [24, 24, 26]
+modulate = true
+
+[[texture.op]]
+type = "erase"
+region = { box = [118, 806, 431, 936] }
+mask = { kind = "luminance", max = 75, grow = 2 }
+method = "pullpush"
+grain = { ref = [124, 940, 425, 965], sigma = 2.0, gain = 1.0, seed = 74 }
+
+[[texture.op]]
+type = "text"
+text = "ТЭ"
+font = "Tektur.ttf"
+axes = { wght = 600 }
+fit = "fill_box"
+box = [124, 812, 425, 930]
+rot = 180
+colour = [24, 24, 26]
+modulate = true

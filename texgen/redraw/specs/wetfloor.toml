@@ -1,0 +1,72 @@
+# CAUTION / WET FLOOR sign: 1633 (256) and its 1:1 copy in atlas 0053 at y+768 (0053 declares use_group in signs.toml).
+# Orientation measured by correlating renders with the original: mirrored, then turned 270 (rot=270 + mirror).
+# Reading-frame line 1 (WET) is the right column, line 2 (FLOOR) the left one.
+
+[[group]]
+id = "wetfloor"
+space = [256, 256]
+
+[[group.member]]
+id = "1633"
+transform = { scale = 1, offset = [0, 0] }
+
+[[group.member]]
+id = "0053"
+transform = { scale = 1, offset = [0, 768] }
+
+[[group.op]]
+type = "erase"
+region = { box = [80, 157, 140, 235] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.5, min = 100, grow = 1 }
+method = "pullpush"
+grain = { ref = [88, 236, 136, 244], sigma = 1.2, gain = 0.8, seed = 81 }
+
+# line 1: МОКРЫЙ (right column, longer span than WET)
+[[group.op]]
+type = "text"
+text = "МОКРЫЙ"
+font = "bahnschrift.ttf"
+variation = "Bold Condensed"
+fit = "fit"
+box = [113, 160, 136, 232]
+rot = 270
+mirror = true
+colour = [167, 56, 8]
+
+# line 2: ПОЛ (left column)
+[[group.op]]
+type = "text"
+text = "ПОЛ"
+font = "bahnschrift.ttf"
+variation = "Bold Condensed"
+fit = "fit"
+box = [84, 172, 107, 220]
+rot = 270
+mirror = true
+colour = [167, 56, 8]
+
+# CAUTION inside the black frame
+[[group.op]]
+type = "erase"
+region = { box = [207, 151, 223, 239] }
+mask = { kind = "luminance", max = 120, grow = 1 }
+method = "pullpush"
+
+[[group.op]]
+type = "text"
+text = "ОСТОРОЖНО"
+font = "bahnschrift.ttf"
+variation = "Bold Condensed"
+fit = "fit"
+sx_min = 0.6
+box = [208, 153, 222, 237]
+rot = 270
+mirror = true
+colour = [72, 39, 0]
+
+[[texture]]
+id = "1633"
+
+[[texture.op]]
+type = "use_group"
+group = "wetfloor"

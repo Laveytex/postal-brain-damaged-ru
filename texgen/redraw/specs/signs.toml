@@ -99,3 +99,11 @@ id = "0053"
 [[texture.op]]
 type = "use_group"
 group = "stop"
+
+[[texture.op]]
+type = "use_group"
+group = "cate"
+
+[[texture.op]]
+type = "use_group"
+group = "wetfloor"

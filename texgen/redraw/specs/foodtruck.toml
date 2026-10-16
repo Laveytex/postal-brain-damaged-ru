@@ -1,0 +1,37 @@
+# 1673 Food truck: KROTCHY'S logo -> КРОЧЧИ (ChatGPT lettering sheet postal-ru-krotchy), MENU -> МЕНЮ.
+# The "SECRET…" graffiti is not in ТЗ and stays.
+
+[[texture]]
+id = "1673"
+
+[[texture.op]]
+type = "erase"
+region = { box = [4, 2, 204, 61] }
+mask = { kind = "saturation", min = 45, grow = 2 }
+method = "flat"
+colour = [0, 0, 0]
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-krotchy.png"
+crop = [46, 303, 1490, 699]
+fit = "fit"
+box = [6, 4, 201, 58]
+
+[[texture.op]]
+type = "erase"
+id = "menu"
+region = { box = [290, 187, 326, 200] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.3, min = 90, grow = 1 }
+method = "pullpush"
+grain = { ref = [290, 176, 326, 186], sigma = 1.2, gain = 1.0, seed = 51 }
+
+[[texture.op]]
+type = "text"
+text = "МЕНЮ"
+font = "bahnschrift.ttf"
+variation = "Bold"
+fit = "fit"
+box = [293, 190, 323, 197]
+colour = [221, 155, 94]
+tracking = 1
