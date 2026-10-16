@@ -24,12 +24,22 @@ stroke_colour = [222, 223, 222]
 [[texture]]
 id = "0741"
 
+# patterned background: copy real pattern instead of smoothing (upper half from above, lower half from below)
 [[texture.op]]
 type = "erase"
-region = { box = [6, 22, 118, 50] }
+region = { box = [6, 20, 118, 36] }
 mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 150 }, { kind = "saturation", max = 70 } ] }
-method = "pullpush"
-grain = { ref = [0, 48, 128, 64], sigma = 1.5, gain = 0.8, seed = 3 }
+method = "clone"
+offset = [0, -17]
+feather = 1
+
+[[texture.op]]
+type = "erase"
+region = { box = [6, 36, 118, 50] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 150 }, { kind = "saturation", max = 70 } ] }
+method = "clone"
+offset = [0, 14]
+feather = 1
 
 [[texture.op]]
 type = "text"
@@ -41,17 +51,27 @@ colour = [247, 239, 247]
 tracking = 1
 stroke = 0.5
 stroke_colour = [247, 239, 247]
-shadow = { dx = 1, dy = 1, blur = 0.6, colour = [20, 0, 20], opacity = 0.7 }
+shadow = { dx = 1, dy = 1, blur = 0, colour = [20, 0, 20], opacity = 0.6 }
 
 [[texture]]
 id = "0808"
 
+# patterned background: copy real pattern instead of smoothing (upper half from above, lower half from below)
 [[texture.op]]
 type = "erase"
-region = { box = [9, 22, 121, 49] }
+region = { box = [9, 20, 121, 36] }
 mask = { kind = "all", grow = 2, of = [ { kind = "luminance", min = 205 }, { kind = "saturation", max = 45 } ] }
-method = "pullpush"
-grain = { ref = [0, 48, 128, 64], sigma = 1.5, gain = 1.0, seed = 4 }
+method = "clone"
+offset = [0, -17]
+feather = 1
+
+[[texture.op]]
+type = "erase"
+region = { box = [9, 36, 121, 50] }
+mask = { kind = "all", grow = 2, of = [ { kind = "luminance", min = 205 }, { kind = "saturation", max = 45 } ] }
+method = "clone"
+offset = [0, 14]
+feather = 1
 
 [[texture.op]]
 type = "text"
@@ -63,17 +83,27 @@ colour = [247, 247, 247]
 tracking = 1
 stroke = 0.5
 stroke_colour = [247, 247, 247]
-shadow = { dx = 1, dy = 1, blur = 0.8, colour = [40, 70, 95], opacity = 0.8 }
+shadow = { dx = 1, dy = 1, blur = 0, colour = [40, 70, 95], opacity = 0.6 }
 
 [[texture]]
 id = "1284"
 
+# patterned background: copy real pattern instead of smoothing (upper half from above, lower half from below)
 [[texture.op]]
 type = "erase"
-region = { box = [7, 21, 120, 49] }
+region = { box = [7, 20, 120, 36] }
 mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 170 }, { kind = "saturation", max = 80 } ] }
-method = "pullpush"
-grain = { ref = [0, 48, 128, 64], sigma = 1.5, gain = 0.9, seed = 5 }
+method = "clone"
+offset = [0, -17]
+feather = 1
+
+[[texture.op]]
+type = "erase"
+region = { box = [7, 36, 120, 50] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 170 }, { kind = "saturation", max = 80 } ] }
+method = "clone"
+offset = [0, 14]
+feather = 1
 
 [[texture.op]]
 type = "text"
@@ -85,7 +115,7 @@ colour = [247, 243, 239]
 tracking = 1
 stroke = 0.5
 stroke_colour = [247, 243, 239]
-shadow = { dx = 1, dy = 1, blur = 0.6, colour = [40, 8, 0], opacity = 0.7 }
+shadow = { dx = 1, dy = 1, blur = 0, colour = [40, 8, 0], opacity = 0.6 }
 
 [[texture]]
 id = "1889"

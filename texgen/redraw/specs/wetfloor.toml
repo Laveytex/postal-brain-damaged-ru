@@ -49,8 +49,9 @@ colour = [167, 56, 8]
 [[group.op]]
 type = "erase"
 region = { box = [207, 151, 223, 239] }
-mask = { kind = "luminance", max = 120, grow = 1 }
-method = "pullpush"
+mask = { kind = "luminance", max = 150, grow = 1 }
+method = "flat"
+colour = [236, 176, 10]
 
 [[group.op]]
 type = "text"
