@@ -1,0 +1,332 @@
+# Dixon campaign lettering. Assets are ChatGPT lettering sheets (imgloop jobs postal-ru-dixon-*), copied into the
+# ignored texgen/redraw/assets/. Sheet blocks (1536x1024):
+#   blue:   ДИКСОН [244,35,1294,278]  ГОЛОСУЙ [347,331,1185,549]  ДИКСОН/И/ЛЕОН [440,628,1093,992]
+#   red:    ЖМИ/ЗА/ДИКА! [104,53,682,563]  РЫЖИЙ—/ЗНАЧИТ/ПЛОХОЙ [847,40,1489,551]  ДИКС [66,666,762,950]  2025 [904,685,1458,931]
+#   grunge: ТОЛЬКО [86,116,691,276]  ДИКСОН [84,290,690,473]  ТОЛЬКО [866,114,1457,276]  ДИКС [905,289,1418,477]
+#           ГОЛОСУЙ [65,643,707,863]  ЗА ДИКСА [838,677,1482,873]
+
+[[texture]]
+id = "1805"
+
+# --- blue brush on white circles ---
+[[texture.op]]
+type = "erase"
+region = { box = [52, 56, 132, 94] }
+mask = { kind = "channel_dominance", channel = "b", ratio = 1.25, min = 50, grow = 1 }
+method = "pullpush"
+grain = { ref = [62, 93, 122, 99], sigma = 1.5, gain = 1.0, seed = 21 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [244, 35, 1294, 278]
+fit = "fit"
+box = [55, 58, 129, 91]
+
+[[texture.op]]
+type = "erase"
+region = { box = [48, 196, 138, 228] }
+mask = { kind = "channel_dominance", channel = "b", ratio = 1.25, min = 50, grow = 1 }
+method = "pullpush"
+grain = { ref = [62, 228, 124, 234], sigma = 1.5, gain = 1.0, seed = 22 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [347, 331, 1185, 549]
+fit = "fit"
+box = [51, 199, 135, 225]
+
+[[texture.op]]
+type = "erase"
+region = { box = [214, 398, 336, 456] }
+mask = { kind = "channel_dominance", channel = "b", ratio = 1.25, min = 50, grow = 1 }
+method = "pullpush"
+grain = { ref = [232, 456, 318, 464], sigma = 1.5, gain = 1.0, seed = 23 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [244, 35, 1294, 278]
+fit = "fit"
+box = [222, 404, 326, 450]
+
+# --- grunge posters (top row) ---
+[[texture.op]]
+type = "erase"
+region = { box = [205, 3, 280, 26] }
+mask = { kind = "luminance", max = 140, grow = 1 }
+method = "pullpush"
+grain = { ref = [214, 27, 250, 33], sigma = 1.2, gain = 1.0, seed = 24 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-grunge.png"
+crop = [86, 116, 691, 276]
+fit = "fit"
+box = [207, 4, 278, 24]
+
+[[texture.op]]
+type = "erase"
+region = { box = [198, 75, 277, 95] }
+mask = { kind = "luminance", max = 140, grow = 1 }
+method = "pullpush"
+grain = { ref = [214, 27, 250, 33], sigma = 1.2, gain = 1.0, seed = 25 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-grunge.png"
+crop = [84, 290, 690, 473]
+fit = "fit"
+box = [200, 77, 275, 93]
+
+[[texture.op]]
+type = "erase"
+region = { box = [295, 3, 347, 26] }
+mask = { kind = "luminance", max = 140, grow = 1 }
+method = "pullpush"
+grain = { ref = [300, 27, 340, 33], sigma = 1.2, gain = 1.0, seed = 26 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-grunge.png"
+crop = [866, 114, 1457, 276]
+fit = "fit"
+box = [297, 4, 345, 24]
+
+[[texture.op]]
+type = "erase"
+region = { box = [295, 75, 334, 95] }
+mask = { kind = "luminance", max = 140, grow = 1 }
+method = "pullpush"
+grain = { ref = [300, 27, 340, 33], sigma = 1.2, gain = 1.0, seed = 27 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-grunge.png"
+crop = [905, 289, 1418, 477]
+fit = "fit"
+box = [297, 77, 332, 93]
+
+[[texture.op]]
+type = "erase"
+region = { box = [385, 15, 464, 40] }
+mask = { kind = "luminance", max = 140, grow = 1 }
+method = "pullpush"
+grain = { ref = [395, 82, 455, 92], sigma = 1.2, gain = 1.0, seed = 28 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-grunge.png"
+crop = [65, 643, 707, 863]
+fit = "fit"
+box = [387, 17, 462, 38]
+
+[[texture.op]]
+type = "erase"
+region = { box = [384, 47, 447, 80] }
+mask = { kind = "any", grow = 1, of = [ { kind = "luminance", max = 150 }, { kind = "channel_dominance", channel = "r", ratio = 1.3, min = 70 } ] }
+method = "pullpush"
+grain = { ref = [395, 82, 455, 92], sigma = 1.2, gain = 1.0, seed = 29 }
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-grunge.png"
+crop = [838, 677, 1482, 873]
+fit = "fit"
+box = [386, 50, 462, 77]
+
+# --- 1829 (EDAS assets) + 1444 (destroyed version, same layout, blood on top) ---
+[[group]]
+id = "edas"
+space = [512, 512]
+
+[[group.member]]
+id = "1829"
+
+[[group.member]]
+id = "1444"
+
+# DIXON: white letters on the red plate (the "=" bars on both sides stay)
+[[group.op]]
+type = "erase"
+region = { box = [42, 30, 131, 75] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 150 }, { kind = "saturation", max = 80 } ] }
+method = "pullpush"
+grain = { ref = [52, 22, 122, 28], sigma = 1.5, gain = 1.0, seed = 31 }
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [244, 35, 1294, 278]
+recolour = { mode = "set", colour = [242, 248, 246] }
+stroke = 1
+stroke_colour = [40, 8, 8]
+fit = "fit"
+box = [44, 32, 129, 72]
+
+# DI[x] -> ДИКС[x]  (checkbox kept; 2025 kept)
+[[group.op]]
+type = "erase"
+region = { box = [185, 31, 214, 68] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 100, grow = 1 }
+method = "pullpush"
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-red.png"
+crop = [66, 666, 762, 950]
+fit = "fit"
+box = [186, 34, 213, 65]
+
+# CLICK / WITH / DICK!  ->  ЖМИ / ЗА / ДИКА!
+[[group.op]]
+type = "erase"
+region = { box = [333, 38, 390, 131] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 100, grow = 1 }
+method = "pullpush"
+
+[[group.op]]
+type = "erase"
+region = { box = [378, 98, 394, 131] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-red.png"
+crop = [104, 53, 682, 563]
+fit = "fit"
+box = [334, 41, 389, 128]
+
+# RED IS (icon) BAD  ->  РЫЖИЙ — (icon) ПЛОХОЙ
+[[group.op]]
+type = "erase"
+region = { box = [443, 33, 500, 58] }
+mask = { kind = "any", grow = 1, of = [ { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 100 }, { kind = "luminance", max = 28 } ] }
+method = "pullpush"
+
+[[group.op]]
+type = "erase"
+region = { box = [470, 32, 503, 59] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-red.png"
+crop = [847, 40, 1489, 222]
+fit = "fit"
+box = [444, 35, 501, 56]
+
+[[group.op]]
+type = "erase"
+region = { box = [451, 98, 490, 130] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 100, grow = 1 }
+method = "pullpush"
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-red.png"
+crop = [847, 388, 1489, 551]
+fit = "fit"
+box = [448, 100, 494, 127]
+
+[[texture]]
+id = "1829"
+
+[[texture.op]]
+type = "use_group"
+group = "edas"
+
+[[texture]]
+id = "1444"
+
+[[texture.op]]
+type = "use_group"
+group = "edas"
+
+# --- DIXON & LEON billboard circle: 0202 and 0296 share the same placement ---
+[[group]]
+id = "dixon_leon"
+space = [512, 512]
+
+[[group.member]]
+id = "0202"
+
+[[group.member]]
+id = "0296"
+
+[[group.op]]
+type = "erase"
+region = { box = [210, 370, 297, 460] }
+mask = { kind = "any", grow = 1, of = [ { kind = "channel_dominance", channel = "b", ratio = 1.25, min = 50 }, { kind = "all", of = [ { kind = "luminance", max = 120 }, { kind = "near", of = { kind = "channel_dominance", channel = "b", ratio = 1.25, min = 50 }, radius = 3 } ] } ] }
+method = "pullpush"
+grain = { ref = [300, 410, 322, 440], sigma = 1.5, gain = 1.0, seed = 41 }
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [440, 628, 1093, 770]
+fit = "fit"
+box = [212, 374, 295, 407]
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [725, 771, 812, 859]
+fit = "fit"
+box = [240, 409, 268, 425]
+
+[[group.op]]
+type = "asset"
+path = "postal-ru-dixon-blue.png"
+crop = [440, 856, 1093, 992]
+fit = "fit"
+box = [218, 429, 290, 456]
+
+[[texture]]
+id = "0202"
+
+[[texture.op]]
+type = "use_group"
+group = "dixon_leon"
+
+[[texture]]
+id = "0296"
+
+[[texture.op]]
+type = "use_group"
+group = "dixon_leon"
+
+# DIX on the navy rosette (MEL rosette is a name, not in ТЗ — kept)
+[[texture.op]]
+type = "erase"
+region = { box = [89, 39, 125, 68] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-red.png"
+crop = [66, 666, 762, 950]
+recolour = { mode = "set", colour = [240, 240, 240] }
+fit = "fit"
+box = [92, 43, 122, 64]
+
+[[texture]]
+id = "0310"
+
+[[texture.op]]
+type = "erase"
+region = { box = [11, 55, 35, 72] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "asset"
+path = "postal-ru-dixon-red.png"
+crop = [66, 666, 762, 950]
+recolour = { mode = "set", colour = [240, 240, 240] }
+fit = "fit"
+box = [13, 57, 33, 70]
