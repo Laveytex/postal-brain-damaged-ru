@@ -285,8 +285,23 @@ New erase method `method = "patch"` (all other erase semantics unchanged: only t
 - Parameters (all optional): `patch = 7` (odd, 3–15, patch side in pixels at the finest scale), `iterations = 5` (1–20),
   `em = 3` (1–10), `seed = 0`, `source = [[x0,y0,x1,y1], …]` (boxes where source patch centres may lie; default: the
   op region dilated by `margin = 48` px clipped to the image), `exclude = [[…], …]` (boxes never used as source, e.g. faces).
-  A source patch is valid only if all its pixels are known (outside the mask) and inside the image.
-- Work only on the bounding box of (region ∪ source) for speed; 1024/2048 textures must not process the whole image.
+  Footprint semantics (B1): a donor patch is valid only if its WHOLE footprint (every pixel) lies inside the image, inside
+  the union of `source` boxes, outside every `exclude` box, and outside the erase mask (known pixels). Centre-only
+  eligibility is not used anywhere.
+- Read/write bounds (B2): pixels are READ from the image in full-resolution coordinates (donor footprints and target
+  patches may extend up to the patch radius plus pyramid-filter support beyond the region/source boxes, clipped only at
+  the real image edges); pixels are WRITTEN only where the op's mask is set.
+- Pyramid levels (B3): the same patch side is used at every level. Masks propagate conservatively: a coarse pixel is
+  KNOWN only if all of its fine children are known (so masked lettering never leaks into coarse donors); a coarse pixel
+  is EXCLUDED/outside-source if any child is. Donor validity is recomputed at each level from those propagated masks.
+  The starting (coarsest) level is the coarsest level at which (i) the hole is ≤ ~16 px across or the finest level is
+  reached, and (ii) at least one valid donor exists; if a candidate coarse level has no valid donor the algorithm starts
+  at the next finer level that has one (deterministic). The finest level always has a donor (validated up front).
+- Work scope (B4): the target domain (NNF entries, voting) covers only patches that overlap the hole. Donors are kept as a
+  compact list/index of valid donor top-left positions computed over the source boxes only (integral-image test per box);
+  random search and propagation draw from that index, so work is O(hole patches × iterations), independent of how large or
+  distant the source boxes are. Whole-image donor indexing is permitted (memory for a 2048² RGB float image is acceptable);
+  no per-pixel full-image passes beyond building the donor index and the pyramid of the read window(s).
 - Deterministic: own `numpy.random.default_rng(seed)` per call, no global state; same inputs → identical bytes.
 - Performance: numpy-vectorised; a 60×60 hole in a 512×512 texture finishes in ≤ 20 s on this machine (host measures).
 - Validation: ranges above, boxes inside the image, `source` minus `exclude` must contain at least one valid patch
@@ -299,8 +314,15 @@ Verification additions (same proof command):
     truth ≤ 0.5 × the MAE of pullpush on the same hole, and the filled area keeps the pattern's high-frequency energy
     (std of a high-pass ≥ 0.6 × the ground truth's);
 (b) determinism (same seed → identical, different seed may differ);
-(c) source/exclude respected: a hole filled only from a source box of one colour yields only that colour (within 1);
+(c) source/exclude respected (footprint semantics): a hole filled only from a uniform-colour source box (whole footprints
+    inside it) yields only that colour (within 1); an exclusion-edge case where a patch centred just outside an excluded
+    face would overlap it is never used (no excluded colour appears in the fill);
+(c2) narrow source box near the read-window edge: a donor whose footprint needs pixels beyond the region/source boxes
+    is sampled correctly (B2 regression);
+(c3) coarse-level fallback: valid finest-scale donors but none at the first proposed coarse level → completes without error
+    (B3 regression);
 (d) only mask pixels change; RGBA alpha untouched;
 (e) validation errors (patch even/out of range, empty valid source);
-(f) performance smoke: 60×60 hole in 512×512 completes (timing printed, not asserted beyond a generous 120 s cap).
+(f) performance smoke: 60×60 hole in 512×512 completes (timing printed, not asserted beyond a generous 120 s cap);
+(f2) large image: 2048×2048 with a 20×20 hole and `source` = the whole image completes within the same cap (B4).
 Manual: host re-builds billboard 0074/1385 with `method = "patch"` and reviews previews at 4× for blur/seams.
