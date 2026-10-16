@@ -2,7 +2,7 @@
 import math
 from dataclasses import dataclass
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 from . import compose
 from .spec import font_path, asset_path
 
@@ -36,8 +36,109 @@ def font_for(op, size):
     return font
 
 
+def glyph_drips(glyph, line_height, options, rng):
+    """Extend transformed ink downward; return coverage and its origin offset."""
+    count = rng.poisson(options.get("count", .6))
+    if not count:
+        return glyph, (0, 0)
+    ink = np.asarray(glyph) > 0
+    band = max(0, math.floor(glyph.height*.85))
+    candidates = np.flatnonzero(ink[band:].any(axis=0))
+    drops = []
+    for _ in range(count):
+        x = int(rng.choice(candidates))
+        y = int(np.flatnonzero(ink[:, x])[-1])
+        length = rng.uniform(*options.get("length", [.3, 1.2]))*line_height
+        width = rng.uniform(*options.get("width", [.06, .14]))*line_height
+        drops.append((x, y, length, max(1, width)))
+    left = math.floor(min(0, *(x-.8*w for x,y,h,w in drops)))
+    top = math.floor(min(0, *(y+h-.8*w for x,y,h,w in drops)))
+    right = math.ceil(max(glyph.width, *(x+.8*w+1 for x,y,h,w in drops)))
+    bottom = math.ceil(max(glyph.height, *(y+h+.8*w+1 for x,y,h,w in drops)))
+    layer = Image.new("L", (right-left, bottom-top))
+    draw = ImageDraw.Draw(layer)
+    for x,y,length,width in drops:
+        x -= left
+        y -= top
+        end = y+length
+        draw.polygon([(x-width/2,y), (x+width/2,y),
+                      (x+.325*width,end), (x-.325*width,end)], fill=255)
+        radius = .8*width
+        draw.ellipse((x-radius,end-radius,x+radius,end+radius), fill=255)
+    original = Image.new("L", layer.size)
+    original.paste(glyph, (-left, -top))
+    return ImageChops.lighter(layer, original), (left, top)
+
+
+def effected_glyphs(op, font, ss):
+    """Yield ink and positions in the unchanged, kerned multiline layout frame.
+
+    Keep glyphs separate until their transforms/drips are complete. Dynamic
+    extents prevent clipping long drips or rotated ink before the fit/overflow
+    checks. Each invocation restarts private RNGs, including fit measurement.
+    """
+    jitter = op.get("jitter", {})
+    drips = op.get("drips", {})
+    jitter_rng = np.random.default_rng(int(jitter.get("seed", 1)))
+    drip_rng = np.random.default_rng(int(drips.get("seed", 2)))
+    lines = op["text"].split("\n")
+    tracking = op.get("tracking", 0)*ss
+    widths = [font.getlength(line)+max(0,len(line)-1)*tracking for line in lines]
+    line_height = sum(font.getmetrics())
+    step = line_height*op.get("spacing", 1)
+    for n, (line, width) in enumerate(zip(lines, widths)):
+        align = op.get("align", "center")
+        x = (max(widths)-width)*(0 if align=="left" else 1 if align=="right" else .5)
+        for index, ch in enumerate(line):
+            l,t,r,b = font.getbbox(ch)
+            if not ch.isspace() and r>l and b>t:
+                glyph = Image.new("L", (r-l+4, b-t+4))
+                ImageDraw.Draw(glyph).text((2-l,2-t), ch, font=font, fill=255)
+                bounds = glyph.getbbox()
+                if bounds:
+                    gx,gy = x+l-2+bounds[0], n*step+t-2+bounds[1]
+                    glyph = glyph.crop(bounds)
+                    cx,cy = gx+glyph.width/2, gy+glyph.height/2
+                    angle = jitter_rng.uniform(-jitter.get("rotate",0), jitter.get("rotate",0))
+                    shift = jitter_rng.uniform(-jitter.get("shift",0), jitter.get("shift",0))*line_height
+                    scale = jitter_rng.uniform(1-jitter.get("scale",0), 1+jitter.get("scale",0))
+                    if scale != 1:
+                        glyph = compose.resize(glyph, (max(1,round(glyph.width*scale)),
+                                                      max(1,round(glyph.height*scale))))
+                    if angle:
+                        glyph = glyph.rotate(angle, Image.Resampling.BICUBIC, expand=True)
+                    gx,gy = cx-glyph.width/2, cy-glyph.height/2+shift
+                    # Rotation can add transparent margins; drip origins use ink.
+                    bounds = glyph.getbbox()
+                    if bounds:
+                        # Snap once before adding integer drip margins. Rounding
+                        # a half-pixel again after an odd margin changes parity.
+                        gx,gy = round(gx+bounds[0]), round(gy+bounds[1])
+                        glyph = glyph.crop(bounds)
+                        if "drips" in op and drips.get("count",.6)>0:
+                            glyph, (dx,dy) = glyph_drips(glyph, line_height, drips, drip_rng)
+                            gx,gy = gx+dx, gy+dy
+                        yield glyph, gx, gy
+            advance = (font.getlength(ch+line[index+1])-font.getlength(line[index+1])
+                       if index+1<len(line) else font.getlength(ch))
+            x += advance+tracking
+
+
 def raw_text(op, size, ss):
     font = font_for(op,max(1,round(size*ss)))
+    jitter = op.get("jitter", {})
+    if (any(jitter.get(key,0) for key in ("rotate","shift","scale")) or
+            "drips" in op and op["drips"].get("count",.6)>0):
+        glyphs = list(effected_glyphs(op, font, ss))
+        if not glyphs:
+            raise ValueError("text has no visible ink")
+        l,t = min(x for g,x,y in glyphs), min(y for g,x,y in glyphs)
+        r,b = max(x+g.width for g,x,y in glyphs), max(y+g.height for g,x,y in glyphs)
+        image = Image.new("L", (r-l,b-t))
+        for glyph,x,y in glyphs:
+            box = (x-l,y-t,x-l+glyph.width,y-t+glyph.height)
+            image.paste(ImageChops.lighter(image.crop(box),glyph), box)
+        return image.crop(image.getbbox())
     lines = op["text"].split("\n")
     tracking = op.get("tracking",0)*ss
     widths = [font.getlength(line)+max(0,len(line)-1)*tracking for line in lines]

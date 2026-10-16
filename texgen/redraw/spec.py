@@ -195,6 +195,31 @@ def paint_reference(op, erases, where):
         raise SpecError(f"{where}: tint requires paint_from to reference an untint erase")
 
 
+def text_effects(op, where):
+    """Effects alter canonical coverage, never per-member style."""
+    for name, fields in (("jitter", "rotate shift scale seed"),
+                         ("drips", "count length width seed colour")):
+        if name not in op:
+            continue
+        effect = op[name]
+        loc = f"{where}/{name}"
+        keys(effect, fields, loc)
+        if "seed" in effect:
+            number(effect["seed"], loc+"/seed", 0, integer=True)
+        limits = {"rotate":45, "shift":.5, "scale":.5} if name == "jitter" else {"count":5}
+        for key, upper in limits.items():
+            if key in effect:
+                number(effect[key], loc+"/"+key, 0, upper)
+        for key in ("length", "width"):
+            if key in effect:
+                value = effect[key]
+                vector(value, 2, loc+"/"+key, minimum=0, maximum=3)
+                if value[0] <= 0 or value[0] > value[1]:
+                    raise SpecError(f"{loc}/{key}: expected 0 < min <= max <= 3")
+        if name == "drips" and effect.get("colour", "fill") != "fill":
+            raise SpecError(f"{loc}/colour: only 'fill' is supported")
+
+
 def operations(ops, size, where, in_group=False):
     previous, erase_ids = set(), {}
     dependencies = set()
@@ -247,7 +272,7 @@ def operations(ops, size, where, in_group=False):
                 continue
             if typ not in ("text","asset"):
                 raise SpecError(f"unknown op type {typ!r}")
-            keys(op,DRAW+(" text font axes variation align spacing tracking size sx_min supersample" if typ=="text" else " path crop recolour key"),loc)
+            keys(op,DRAW+(" text font axes variation align spacing tracking size sx_min supersample jitter drips" if typ=="text" else " path crop recolour key"),loc)
             if "box" not in op and "quad" not in op:
                 raise SpecError("text/asset requires box or quad")
             if "box" in op and "quad" in op:
@@ -278,6 +303,7 @@ def operations(ops, size, where, in_group=False):
             if (op.get("colour")=="auto" or op.get("stroke_colour")=="auto" or op.get("blend")=="tint") and "paint_from" not in op:
                 raise SpecError("auto/tint requires paint_from")
             if typ == "text":
+                text_effects(op,loc)
                 if not isinstance(op.get("text"),str) or not op["text"].strip():
                     raise SpecError("text must be a nonempty string")
                 path = font_path(op["font"])

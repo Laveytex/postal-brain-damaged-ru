@@ -185,6 +185,48 @@ font instance; unknown axes, names or out-of-range values fail.
 * `opacity=1` scales layer alpha. `modulate=true` multiplies layer RGB by local
   underlying luminance relative to its Gaussian-smoothed value.
 
+### Optional glyph jitter and drips
+
+These text-only effects are also allowed on group text ops. They are not member
+`style` overrides: the group renders its effected coverage once, then maps that
+same coverage to every member. Assets do not accept these keys.
+
+```toml
+jitter = { rotate = 8.0, shift = 0.12, scale = 0.12, seed = 1 }
+drips = { count = 0.6, length = [0.3, 1.2], width = [0.06, 0.14], seed = 2, colour = "fill" }
+```
+
+`jitter` independently rotates each visible glyph uniformly within ±`rotate`
+degrees, shifts its baseline uniformly within ±`shift` times the font line
+height, and scales its ink uniformly within `[1-scale, 1+scale]`. Rotation and
+scaling are about the glyph's ink centre. Kerning, tracking, advances, spaces,
+line alignment and baseline spacing retain the ordinary layout positions.
+Missing rotate/shift/scale values default to zero; seed defaults to 1.
+Allowed ranges are rotate 0–45, shift 0–0.5 and scale 0–0.5.
+
+`drips` draws a seeded Poisson count per visible glyph (mean `count`, range 0–5).
+Each origin is a random column with ink in the transformed glyph's bottom 15%,
+starting at that column's lowest ink pixel. A straight vertical drip tapers to
+65% of its starting width and ends in a round drop of diameter about 1.6 times
+that width. Length and width are sampled uniformly from their respective ranges,
+in units of the font line height (ascent + descent, before `spacing`). Each range
+must have `0 < min <= max <= 3`. Missing fields default to the values in the
+example. Only `colour="fill"` is supported; drips join the glyph fill coverage
+before stroke/shadow, so all ordinary styling and blending also applies to them.
+
+Both seeds are nonnegative integers. Each effect has its own private RNG, reset
+on each render, independent of global random state; spaces consume no draws.
+All-zero jitter and count-zero drips retain the original rendering path and are
+byte-identical to omitting the effects, including in fixed mode. Unknown keys,
+invalid types and out-of-range values fail with spec/texture or group/op context.
+
+Effects precede sizing. `fit` and `fill_box` measure complete effected ink and
+style extents before fitting. `fixed` retains the requested font size, with no
+box fitting: complete ink must fit within the union of allowed geometry, or the
+op must explicitly set `clip=true`. An explicit texture `allow` can permit ink
+outside the placement box. The independent checker and allowed geometry rules
+are unchanged.
+
 ## Assets
 
 `type="asset"`, `path="lettering.png"` resolves relative to `redraw/assets/`, or

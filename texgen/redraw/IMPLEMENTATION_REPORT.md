@@ -1,6 +1,6 @@
 # Advisory implementation report
 
-The latest handoff is the **Fix round 3** section at the end of this report.
+The latest handoff is the **Amendment A implementation** section at the end of this report.
 
 ## Fix round 1 (2026-10-16)
 
@@ -347,3 +347,90 @@ denials occurred; I/O failures in regression tests were injected. No art edits,
 real-texture delivery, original-checkout writes, commits, pushes or publication
 were performed. This round implements the host's explicit missing-file policy,
 superseding the round 2 F6 interpretation note for recorded specs/outputs/layers.
+## Amendment A implementation (2026-10-16)
+
+Advisory handoff for independent review. Implemented only the frozen plan's
+Amendment A on the existing base. PLAN.md SHA256 was verified before work and
+remains `280a6de726894dffb0a67bcc7b903496881534fc3ff9860b6197af5ff808efcb`.
+
+Files changed in this round:
+
+* `texgen/redraw/text.py`: private seeded per-glyph jitter and Poisson drips;
+  unchanged kerning/tracking advances; dynamically sized coverage before fit;
+  zero-effect fast path retains existing bytes. Snap glyph positions before
+  adding integer drip margins to avoid half-pixel rounding parity shifts.
+* `texgen/redraw/spec.py`: strict nested effect validation, numeric ranges,
+  nonnegative integer seeds, fill-only drip colour; text/group-text only.
+* `texgen/redraw/SPEC.md`: fields, defaults, ranges, RNG, fitting and overflow
+  semantics documented.
+* `texgen/redraw/tests/test_text_effects.py`: 14 new test methods for seeded
+  determinism, zero effects, drip origins/baseline extension, styled fitting,
+  advances/order, independent RNGs, validation, group mapping/render-once,
+  fixed-size overflow/allow/clip, fixed-size invariance across boxes, and complete
+  round-drop coverage at the maximum width/minimum length range boundaries.
+* `texgen/redraw/IMPLEMENTATION_REPORT.md`: this advisory record.
+
+No engine/checker changes were needed: effected ink feeds the existing canonical
+coverage, style, group cache, allowed-region enforcement and independent check.
+The frozen plan, art specs, original checkout and downstream pipeline were not
+modified. No commits, pushes, publication or real-texture delivery occurred.
+
+Agreed proof command attempted from this checkout, including after code changes:
+
+```text
+py -3.12 -m unittest discover -s texgen/redraw/tests -t . -v
+Installed Pythons found by C:\windows\py.exe Launcher for Windows
+No Installed Pythons Found!
+
+Requested Python version (3.12) not installed, use -0 for available pythons
+Python 3.12 not found!
+```
+
+Exit 1 before test discovery. The agreed proof is BLOCKED, not passing.
+
+Supplemental full discovery used the existing Python 3.11.8 interpreter at
+`D:/Engine/UE_5.7/Engine/Binaries/ThirdParty/Python3/Win64/python.exe`, with
+process-local `PYTHONPATH=D:/Work/AR57-UIItegrate/Intermediate/PipInstall/Lib/site-packages`
+(numpy 1.26.4, scipy 1.11.4, Pillow 10.1.0). Its actual summary was:
+
+```text
+Ran 80 tests in 14.039s
+
+FAILED (failures=1, errors=22)
+```
+
+65 test methods passed. The other 15 methods are blocked by the absent
+`fontTools` dependency (22 error entries include subtests; the one failure is
+the launcher `fonts` subprocess encountering the same missing module). Of the
+14 new methods, 12 passed; group end-to-end mapping and fixed-mode end-to-end
+build/check remain blocked by font validation's missing dependency. No packages
+were installed and no dependency or validation was mocked to claim a pass.
+The earlier new-test run exposed the rounding issue noted above and an incorrect
+test assumption that an asymmetric rotated glyph retains its cropped bbox
+centre; both were corrected before this final supplemental discovery.
+Final review also caught round ends extending above the glyph for very wide,
+short drips; the temporary coverage now includes those upper extents. All
+supplemental errors/failures were checked to reference missing `fontTools`.
+The full final output is saved locally in ignored
+`texgen/redraw/preview/amendment-a-supplemental.log`.
+
+A direct render/composite check additionally confirmed fixed-mode overflow fails
+outside allowed geometry and preserves complete coverage with explicit allow.
+An Arial synthetic visual sample was inspected: straight drips join the rotated
+glyph fill, and the effected text fits its box. The sample is local/ignored at
+`texgen/redraw/preview/amendment-a-synthetic.png`; it contains no game artwork.
+`git diff --check` passed (only Git's LF-to-CRLF advisories).
+
+Denied/blocked actions: no permission or automatic-approval denials occurred in
+this round. `rg` was unavailable, so PowerShell reads were used. The PATH Python
+3.10 virtual environment also could not launch its base interpreter. The
+checkout-relative `HANDOFF.md` and `../Текстуры_для_перевода/ТЗ.md` were absent;
+`GLOSSARY.md` was read. Source paths were resolved from this checkout; the
+original checkout was not used as an alternate write target. Real-texture
+0629 build/visual acceptance remains for the host with the source root and
+working Python 3.12 dependencies.
+
+No implementation deviations. Verification deviation: the supplemental 3.11
+results above are evidence only, not a substitute for the agreed 3.12 proof.
+Independent review should run the exact proof command (80 methods now) and the
+host's 0629 preview review before acceptance.
