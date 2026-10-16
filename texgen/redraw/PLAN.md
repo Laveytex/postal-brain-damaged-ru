@@ -269,3 +269,38 @@ Verification additions (repo root, same proof command): tests for
 (g) fixed mode: zero effects byte-identical to the op without effect keys; with effects, an overflow inside an explicit
 `allow` region builds, an overflow outside allowed regions fails.
 Manual: host builds 0629 with Unutterable-Regular.ttf + jitter + drips and reviews the preview visually.
+
+## Amendment B (2026-10-16): exemplar background reconstruction ("content-aware fill")
+Problem: pullpush (smooth) and clone (fixed offset) leave visibly blurred or mismatched patches where old lettering sat on
+photos / complex artwork (user-rejected on billboard 0074: blur where "you" was). Many remaining textures (billboards,
+comic-con posters, train ads, gate, foil-guy signs) have such backgrounds.
+
+New erase method `method = "patch"` (all other erase semantics unchanged: only the op's mask pixels inside its region change):
+- Multi-scale PatchMatch image completion (Barnes et al. 2009 nearest-neighbour field + Wexler et al. 2007 voting):
+  image pyramid (coarse→fine, coarsest hole ≤ ~16 px across); per scale: initialise the NNF (coarse: random; finer:
+  upsampled), `iterations` rounds of propagation + random search over valid source patches, then pixel voting
+  (each unknown pixel = weighted mean of the overlapping patches' corresponding source pixels; weights fall off with
+  distance from the known boundary, Wexler style); a few EM rounds per scale. Unknown pixels are initialised from the
+  coarser scale (finest initial guess may use pullpush).
+- Parameters (all optional): `patch = 7` (odd, 3–15, patch side in pixels at the finest scale), `iterations = 5` (1–20),
+  `em = 3` (1–10), `seed = 0`, `source = [[x0,y0,x1,y1], …]` (boxes where source patch centres may lie; default: the
+  op region dilated by `margin = 48` px clipped to the image), `exclude = [[…], …]` (boxes never used as source, e.g. faces).
+  A source patch is valid only if all its pixels are known (outside the mask) and inside the image.
+- Work only on the bounding box of (region ∪ source) for speed; 1024/2048 textures must not process the whole image.
+- Deterministic: own `numpy.random.default_rng(seed)` per call, no global state; same inputs → identical bytes.
+- Performance: numpy-vectorised; a 60×60 hole in a 512×512 texture finishes in ≤ 20 s on this machine (host measures).
+- Validation: ranges above, boxes inside the image, `source` minus `exclude` must contain at least one valid patch
+  (clear SpecError naming texture/op otherwise). check.py needs no change (allowed geometry unchanged).
+- Group erases: `source`/`exclude` boxes map with the member transform like other geometry; patch size scales and is
+  rounded to the nearest odd ≥ 3.
+
+Verification additions (same proof command):
+(a) synthetic periodic texture (e.g. 8-px stripes or checker + noise) with a 24×24 hole: patch reconstruction MAE vs ground
+    truth ≤ 0.5 × the MAE of pullpush on the same hole, and the filled area keeps the pattern's high-frequency energy
+    (std of a high-pass ≥ 0.6 × the ground truth's);
+(b) determinism (same seed → identical, different seed may differ);
+(c) source/exclude respected: a hole filled only from a source box of one colour yields only that colour (within 1);
+(d) only mask pixels change; RGBA alpha untouched;
+(e) validation errors (patch even/out of range, empty valid source);
+(f) performance smoke: 60×60 hole in 512×512 completes (timing printed, not asserted beyond a generous 120 s cap).
+Manual: host re-builds billboard 0074/1385 with `method = "patch"` and reviews previews at 4× for blur/seams.
