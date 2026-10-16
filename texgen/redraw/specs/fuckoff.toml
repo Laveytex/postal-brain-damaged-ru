@@ -10,11 +10,11 @@ transform = { scale = 0.125 }
 style = { stroke = 1, stroke_colour = [0, 0, 0, 191] }
 [[group.op]]
 type = "text"
-text = "Кнопка\n«Иди на хрен»"
+text = "Кнопка\n«Иди\nна хрен»"
 font = "comicbd.ttf"
 fit = "fit"
 box = [64, 240, 904, 741]
-spacing = 0.88
+spacing = 0.82
 sx_min = 0.72
 colour = [255, 0, 0]
 
