@@ -251,8 +251,10 @@ New optional text-op keys (also allowed in group ops; not in member `style` over
   drawn from `length` × line height, width from `width` × line height, tapering slightly, ending in a round drop
   (diameter ≈ 1.6 × width). Drawn into the same coverage layer as the glyph fill (same colour, before stroke/shadow), so
   stroke/shadow/blend/style apply to drips too. `colour = "fill"` only (reserved for future).
-- Both effects are part of the text layer before fitting: fit/fill_box/fixed measure the final ink including jitter and
-  drips, so the result never leaves the box; the existing "ink outside allowed" check stays authoritative.
+- Both effects are part of the text layer before fitting. `fit` and `fill_box` measure the final ink including jitter
+  and drips, so their result stays inside the box. `fixed` keeps its requested size unchanged (no box fitting); its
+  complete effected ink is subject to the existing overflow rules against the allowed regions (error unless inside
+  allowed / `clip = true`). The existing "ink outside allowed" check stays authoritative for all modes.
 - Validation: numeric ranges (rotate 0–45, shift 0–0.5, scale 0–0.5, count 0–5, length/width as [min ≤ max] in (0, 3]);
   unknown keys → SpecError naming texture/op.
 - check.py needs no change beyond accepting the new keys in spec parsing (allowed geometry unchanged).
@@ -263,5 +265,7 @@ Verification additions (repo root, same proof command): tests for
 (c) drips extend ink below the baseline (max ink row increases) while staying inside the fitted box;
 (d) jitter changes per-glyph ink positions but keeps glyph order (left-to-right ink centroids monotonic for a single line);
 (e) group render-once still holds with jitter+drips (member coverage equals mapped canonical);
-(f) validation errors for out-of-range values.
+(f) validation errors for out-of-range values;
+(g) fixed mode: zero effects byte-identical to the op without effect keys; with effects, an overflow inside an explicit
+`allow` region builds, an overflow outside allowed regions fails.
 Manual: host builds 0629 with Unutterable-Regular.ttf + jitter + drips and reviews the preview visually.
