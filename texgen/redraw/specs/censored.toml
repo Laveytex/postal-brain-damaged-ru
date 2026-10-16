@@ -100,9 +100,9 @@ colour = [0, 0, 0]
 [[texture.op]]
 type = "text"
 text = "ЦЕНЗУРА"
-font = "ariblk.ttf"
+font = "impact.ttf"
 fit = "fit"
-box = [114, 152, 322, 244]
+box = [112, 150, 324, 246]
 angle = 15
-tracking = 6
+tracking = 5
 colour = [255, 255, 255]

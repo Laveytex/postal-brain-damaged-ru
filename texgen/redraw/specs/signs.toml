@@ -13,12 +13,12 @@ grain = { ref = [12, 504, 200, 511], sigma = 1.5, gain = 1.0, seed = 6 }
 [[texture.op]]
 type = "text"
 text = "ТУАЛЕТ"
-font = "bahnschrift.ttf"
-variation = "Bold"
-fit = "fit"
-box = [34, 479, 174, 499]
+font = "ariblk.ttf"
+fit = "fill_box"
+modulate = true
+box = [33, 477, 175, 501]
 colour = [72, 73, 72]
-tracking = 2
+tracking = 1
 stroke = 1
 stroke_colour = [42, 43, 42]
 shadow = { dx = 1, dy = 1, blur = 0.5, colour = [175, 176, 175], opacity = 0.5 }
