@@ -1,0 +1,80 @@
+# Coordinates, text and Tektur weight from spike/recipes.py (reference only).
+[[texture]]
+id = "0265"
+[[texture.op]]
+type = "erase"
+id = "word"
+region = { box = [257, 273, 464, 306] }
+mask = { kind = "saturation", min = 20, grow = 1 }
+method = "untint"
+core = { kind = "saturation", min = 35 }
+[[texture.op]]
+type = "text"
+paint_from = "word"
+text = "СЕКТОР"
+font = "Tektur.ttf"
+axes = { wght = 520 }
+fit = "fill_box"
+box = [260, 276, 461, 303]
+blend = "tint"
+colour = "auto"
+
+[[texture]]
+id = "0879"
+[[texture.op]]
+type = "erase"
+id = "word"
+region = { box = [82, 37, 378, 83] }
+mask = { kind = "saturation", min = 20, grow = 1 }
+method = "untint"
+core = { kind = "saturation", min = 35 }
+[[texture.op]]
+type = "text"
+paint_from = "word"
+text = "СЕКТОР"
+font = "Tektur.ttf"
+axes = { wght = 520 }
+fit = "fill_box"
+box = [85, 40, 375, 80]
+blend = "tint"
+colour = "auto"
+
+[[texture]]
+id = "0303"
+[[texture.op]]
+type = "erase"
+id = "word"
+region = { box = [78, 130, 374, 175] }
+mask = { kind = "saturation", min = 18, grow = 1 }
+method = "untint"
+core = { kind = "saturation", min = 35 }
+[[texture.op]]
+type = "text"
+paint_from = "word"
+text = "СЕКТОР"
+font = "Tektur.ttf"
+axes = { wght = 520 }
+fit = "fill_box"
+box = [81, 133, 371, 172]
+blend = "tint"
+colour = "auto"
+
+[[texture]]
+id = "1281"
+[[texture.op]]
+type = "erase"
+id = "word"
+region = { box = [256, 276, 512, 314] }
+mask = { kind = "saturation", min = 20, grow = 1 }
+method = "untint"
+core = { kind = "saturation", min = 35 }
+[[texture.op]]
+type = "text"
+paint_from = "word"
+text = "ОПАСНО"
+font = "Tektur.ttf"
+axes = { wght = 520 }
+fit = "fill_box"
+box = [259, 279, 509, 311]
+blend = "tint"
+colour = "auto"

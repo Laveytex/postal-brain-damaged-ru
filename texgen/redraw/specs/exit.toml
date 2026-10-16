@@ -1,0 +1,40 @@
+# Shared reading geometry from spike/recipes.py: centre 70.5,76.5; 30x56.
+# Auto colour is sampled independently from each member's erased paint.
+[[group]]
+id = "exit"
+space = [128, 128]
+[[group.member]]
+id = "1976"
+[[group.member]]
+id = "1977"
+[[group.op]]
+type = "erase"
+id = "red"
+region = { box = [52, 46, 90, 106] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 90, min_size = 2, grow = 1 }
+method = "pullpush"
+grain = { ref = [10, 50, 46, 120], gain = 1.0, sigma = 2.0, seed = 0 }
+paint = { colour = 70, stroke_colour = 15 }
+[[group.op]]
+type = "text"
+text = "ВЫХОД"
+font = "bahnschrift.ttf"
+variation = "Bold Condensed"
+paint_from = "red"
+colour = "auto"
+box = [55.5, 48.5, 85.5, 104.5]
+fit = "fit"
+rot = 270
+stroke = 1
+stroke_colour = "auto"
+
+[[texture]]
+id = "1976"
+[[texture.op]]
+type = "use_group"
+group = "exit"
+[[texture]]
+id = "1977"
+[[texture.op]]
+type = "use_group"
+group = "exit"

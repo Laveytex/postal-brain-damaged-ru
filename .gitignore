@@ -14,3 +14,10 @@ ssfn*
 
 # превью сборки шрифтов содержат глифы игры
 fontgen/preview/
+
+# Local texture redraw products and private source artwork
+texgen/redraw/out/
+texgen/redraw/preview/
+texgen/redraw/deliver-log.jsonl
+texgen/redraw/fonts/*.ttf
+texgen/redraw/assets/

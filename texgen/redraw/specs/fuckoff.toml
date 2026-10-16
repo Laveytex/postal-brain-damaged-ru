@@ -1,0 +1,45 @@
+[[group]]
+id = "fuckoff"
+space = [1024, 1024]
+[[group.member]]
+id = "0100"
+transform = { scale = 1.0 }
+[[group.member]]
+id = "1841"
+transform = { scale = 0.125 }
+style = { stroke = 1, stroke_colour = [0, 0, 0, 191] }
+[[group.op]]
+type = "text"
+text = "Кнопка\n«Иди на хрен»"
+font = "comicbd.ttf"
+fit = "fit"
+box = [64, 240, 904, 741]
+spacing = 0.88
+sx_min = 0.72
+colour = [255, 0, 0]
+
+[[texture]]
+id = "0100"
+[[texture.op]]
+type = "erase"
+region = { box = [48, 224, 920, 760] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 0, min = 8, grow = 2 }
+method = "flat"
+colour = [0, 0, 0]
+[[texture.op]]
+type = "use_group"
+group = "fuckoff"
+
+[[texture]]
+id = "1841"
+[[texture.op]]
+type = "erase"
+region = { box = [4, 26, 118, 97] }
+# Spike rule: dark shadow near red, plus red itself, then grow once.
+# Largest RGB-mean third below median(ref luminance)-18 = 118.33333333333334.
+mask = { kind = "any", grow = 1, of = [ { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 110 }, { kind = "all", of = [ { kind = "luminance", max = 118.33333333333333 }, { kind = "near", of = { kind = "channel_dominance", channel = "r", ratio = 1.6, min = 110 }, radius = 4 } ] } ] }
+method = "pullpush"
+grain = { ref = [8, 100, 120, 126], sigma = 1.5, gain = 1.0, seed = 0 }
+[[texture.op]]
+type = "use_group"
+group = "fuckoff"
