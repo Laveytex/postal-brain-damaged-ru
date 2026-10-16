@@ -17,5 +17,11 @@ retain their upstream OFL.txt when redistributing fonts separately.
 | Rubik Dirt | https://github.com/google/fonts/tree/main/ofl/rubikdirt |
 | Forum | https://github.com/google/fonts/tree/main/ofl/forum |
 
+Non-Google OFL fonts (download the zip from the page, copy the Regular .ttf here):
+
+| Family | File | Upstream source | Used by |
+| --- | --- | --- | --- |
+| Unutterable (GGBotNet, SIL OFL 1.1) | `Unutterable-Regular.ttf` | https://ggbot.itch.io/unutterable-font | 0629 blood lettering |
+
 `exit.toml` uses Windows Bahnschrift (Bold Condensed); `fuckoff.toml` uses Windows
 Comic Sans Bold. These are resolved from `C:/Windows/Fonts`, without copying them.
