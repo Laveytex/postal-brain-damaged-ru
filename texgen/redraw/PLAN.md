@@ -232,3 +232,36 @@ Game patching/compression — existing pipeline. GUI.
 - 128×64 textures: readability over fidelity (ТЗ allows).
 - Concurrent work on `main` by another session: this branch (`texgen-redraw`, worktree `D:\Work\postal-ru-redraw-wt`) touches
   only new files + `.gitignore`; merge after inspection.
+
+## Amendment A (2026-10-16): glyph chaos and drips for text ops
+Context: the base implementation (commit fb81608: 66 tests, 3 independent inspections) is the starting point; this
+amendment only adds two optional text effects. Motivating case: 0629_Hospital_Blood — the original has chaotic, punk-style
+hand lettering with blood drips; no free Cyrillic font has both, so the effects are procedural on top of a font
+(e.g. Unutterable-Regular.ttf, local OFL font in ignored `texgen/redraw/fonts/`).
+
+New optional text-op keys (also allowed in group ops; not in member `style` overrides):
+- `jitter = { rotate = 8.0, shift = 0.12, scale = 0.12, seed = 1 }` — per-glyph chaos. For every visible glyph:
+  rotation uniform in ±rotate degrees about the glyph's ink centre, baseline shift uniform in ±shift × line height,
+  uniform scale factor in [1−scale, 1+scale] about the glyph centre. Glyph advances (layout positions) stay as in normal
+  rendering (kerning/tracking preserved); only each glyph's ink is transformed. Spaces unaffected. Seeded, deterministic,
+  independent of global random state; the same op renders identically for every group member (render-once guarantee).
+- `drips = { count = 0.6, length = [0.3, 1.2], width = [0.06, 0.14], seed = 2, colour = "fill" }` — drips from glyph
+  bottoms: `count` = expected drips per glyph (Poisson/binomial, seeded); each drip starts at a random x on the glyph's
+  lowest ink row segment (x where the glyph has ink within its bottom 15 % of height), runs straight down for a length
+  drawn from `length` × line height, width from `width` × line height, tapering slightly, ending in a round drop
+  (diameter ≈ 1.6 × width). Drawn into the same coverage layer as the glyph fill (same colour, before stroke/shadow), so
+  stroke/shadow/blend/style apply to drips too. `colour = "fill"` only (reserved for future).
+- Both effects are part of the text layer before fitting: fit/fill_box/fixed measure the final ink including jitter and
+  drips, so the result never leaves the box; the existing "ink outside allowed" check stays authoritative.
+- Validation: numeric ranges (rotate 0–45, shift 0–0.5, scale 0–0.5, count 0–5, length/width as [min ≤ max] in (0, 3]);
+  unknown keys → SpecError naming texture/op.
+- check.py needs no change beyond accepting the new keys in spec parsing (allowed geometry unchanged).
+
+Verification additions (repo root, same proof command): tests for
+(a) determinism — same seed → identical layer bytes, different seed → different;
+(b) jitter=0 and drips count=0 produce byte-identical output to the op without these keys;
+(c) drips extend ink below the baseline (max ink row increases) while staying inside the fitted box;
+(d) jitter changes per-glyph ink positions but keeps glyph order (left-to-right ink centroids monotonic for a single line);
+(e) group render-once still holds with jitter+drips (member coverage equals mapped canonical);
+(f) validation errors for out-of-range values.
+Manual: host builds 0629 with Unutterable-Regular.ttf + jitter + drips and reviews the preview visually.
