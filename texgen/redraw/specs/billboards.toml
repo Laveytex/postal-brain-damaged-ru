@@ -1,0 +1,94 @@
+# Retro billboards (erase: exemplar patch fill, woman excluded from donors; then the shared kitchen photo is
+# restored from the twin billboard wherever the twin has no lettering — assets <id>-from-<twin>.png, RGBA, alpha =
+# this hole minus the twin's lettering (dilated 2), x < 300): yellow rounded italic script, thick black outline, over a kitchen photo.
+
+[[texture]]
+id = "0074"
+
+[[texture.op]]
+type = "erase"
+region = { box = [222, 30, 309, 104] }
+mask = { kind = "any", grow = 1, of = [ { kind = "all", of = [ { kind = "channel_dominance", channel = "r", ratio = 1.0, min = 150 }, { kind = "saturation", min = 90 } ] }, { kind = "all", of = [ { kind = "luminance", max = 80 }, { kind = "near", of = { kind = "all", of = [ { kind = "channel_dominance", channel = "r", ratio = 1.0, min = 150 }, { kind = "saturation", min = 90 } ] }, radius = 6 } ] } ] }
+method = "patch"
+patch = 9
+seed = 75
+source = [[290, 26, 352, 112], [222, 22, 309, 32]]
+
+[[texture.op]]
+type = "erase"
+region = { poly = [[30, 30], [222, 30], [222, 104], [309, 104], [309, 203], [30, 203]] }
+mask = { kind = "any", grow = 1, of = [ { kind = "all", of = [ { kind = "channel_dominance", channel = "r", ratio = 1.0, min = 150 }, { kind = "saturation", min = 90 } ] }, { kind = "all", of = [ { kind = "luminance", max = 80 }, { kind = "near", of = { kind = "all", of = [ { kind = "channel_dominance", channel = "r", ratio = 1.0, min = 150 }, { kind = "saturation", min = 90 } ] }, radius = 6 } ] } ] }
+method = "patch"
+patch = 7
+seed = 74
+exclude = [[352, 28, 498, 166], [290, 160, 512, 256]]
+
+[[texture.op]]
+type = "asset"
+path = "0074-from-1385.png"
+crop = [31, 40, 300, 203]
+fit = "fixed"
+box = [31, 40, 300, 203]
+
+[[texture.op]]
+type = "text"
+text = "Вот,"
+font = "Lobster-Regular.ttf"
+fit = "fit"
+box = [40, 34, 228, 120]
+colour = [255, 227, 0]
+stroke = 3
+stroke_colour = [12, 8, 8]
+shadow = { dx = 2, dy = 3, blur = 0, colour = [12, 8, 8], opacity = 1 }
+
+[[texture.op]]
+type = "text"
+text = "держи!"
+font = "Lobster-Regular.ttf"
+fit = "fit"
+box = [96, 104, 304, 200]
+colour = [255, 227, 0]
+stroke = 3
+stroke_colour = [12, 8, 8]
+shadow = { dx = 2, dy = 3, blur = 0, colour = [12, 8, 8], opacity = 1 }
+
+[[texture]]
+id = "1385"
+
+[[texture.op]]
+type = "erase"
+region = { box = [66, 18, 296, 168] }
+mask = { kind = "any", grow = 1, of = [ { kind = "all", of = [ { kind = "channel_dominance", channel = "r", ratio = 1.0, min = 150 }, { kind = "saturation", min = 90 } ] }, { kind = "all", of = [ { kind = "luminance", max = 80 }, { kind = "near", of = { kind = "all", of = [ { kind = "channel_dominance", channel = "r", ratio = 1.0, min = 150 }, { kind = "saturation", min = 90 } ] }, radius = 6 } ] } ] }
+method = "patch"
+patch = 7
+seed = 85
+exclude = [[385, 18, 512, 112], [325, 105, 512, 256]]
+
+[[texture.op]]
+type = "asset"
+path = "1385-from-0074.png"
+crop = [67, 19, 296, 168]
+fit = "fixed"
+box = [67, 19, 296, 168]
+
+[[texture.op]]
+type = "text"
+text = "Останься"
+font = "Lobster-Regular.ttf"
+fit = "fit"
+box = [72, 22, 290, 98]
+colour = [255, 227, 0]
+stroke = 3
+stroke_colour = [12, 8, 8]
+shadow = { dx = 2, dy = 3, blur = 0, colour = [12, 8, 8], opacity = 1 }
+
+[[texture.op]]
+type = "text"
+text = "на десерт!"
+font = "Lobster-Regular.ttf"
+fit = "fit"
+box = [72, 94, 290, 163]
+colour = [255, 227, 0]
+stroke = 3
+stroke_colour = [12, 8, 8]
+shadow = { dx = 2, dy = 3, blur = 0, colour = [12, 8, 8], opacity = 1 }

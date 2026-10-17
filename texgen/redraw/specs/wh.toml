@@ -1,0 +1,93 @@
+# 1029 WH posters. Red poster (flat red 252,6,26): BIG DICK IZ WATCHIN' YOU → БОЛЬШОЙ / ДИК (white, black outline) /
+# СЛЕДИТ / ЗА (black) / ТОБОЙ (white, black outline). White poster (flat 238): REDHEAD → РЫЖИЙ, (black), HALT! →
+# СТОЙ! (red, thin dark outline); hand icon and frame kept. Font: Ruthless Sketch (user's pick, 2026-10-17;
+# the ChatGPT sheet postal-ru-wh was rejected for style). Erases: flat fill (both posters are single-colour).
+
+[[texture]]
+id = "1029"
+
+[[texture.op]]
+type = "erase"
+region = { box = [8, 150, 105, 276] }
+mask = { kind = "saturation", max = 225, grow = 1 }
+method = "flat"
+colour = [252, 6, 26]
+
+[[texture.op]]
+type = "text"
+text = "БОЛЬШОЙ"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [12, 151, 102, 175]
+colour = [255, 255, 255]
+stroke = 2
+stroke_colour = [20, 16, 16]
+
+[[texture.op]]
+type = "text"
+text = "ДИК"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [22, 175, 92, 200]
+colour = [255, 255, 255]
+stroke = 2
+stroke_colour = [20, 16, 16]
+
+[[texture.op]]
+type = "text"
+text = "СЛЕДИТ"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [12, 201, 102, 223]
+colour = [20, 16, 16]
+
+[[texture.op]]
+type = "text"
+text = "ЗА"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [30, 223, 84, 246]
+colour = [20, 16, 16]
+
+[[texture.op]]
+type = "text"
+text = "ТОБОЙ"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [14, 247, 100, 274]
+colour = [255, 255, 255]
+stroke = 2
+stroke_colour = [20, 16, 16]
+
+[[texture.op]]
+type = "erase"
+region = { box = [410, 284, 502, 306] }
+mask = { kind = "luminance", max = 232, grow = 1 }
+method = "flat"
+colour = [238, 238, 238]
+
+[[texture.op]]
+type = "text"
+text = "РЫЖИЙ,"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [414, 283, 500, 306]
+colour = [20, 16, 16]
+
+[[texture.op]]
+type = "erase"
+region = { box = [409, 371, 495, 407] }
+mask = { kind = "luminance", max = 232, grow = 1 }
+method = "flat"
+colour = [238, 238, 238]
+
+[[texture.op]]
+type = "text"
+text = "СТОЙ!"
+font = "RuthlessSketch-Regular.ttf"
+fit = "fit"
+box = [412, 372, 494, 407]
+colour = [252, 6, 26]
+stroke = 1
+stroke_colour = [20, 16, 16]
+

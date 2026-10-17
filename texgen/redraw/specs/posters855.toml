@@ -1,0 +1,102 @@
+# 0855 Posters. (1) PLEASE SAVE THE WATER! you little motherfuckers: yellow (253,205,12) pixel-serif with a black
+# outline on a teal photo → ПОЖАЛУЙСТА, / БЕРЕГИТЕ ВОДУ! / эй, вы, / мелкие ублюдки (line 4 keeps the full width, so it
+# again covers the spot where the old "rs" overlapped the mascot). Oswald bold + 1 px black stroke (narrow enough for
+# the longer Russian lines). (2) UFO PORNO! — white pixel letters on purple, rotated 180° in the atlas → НЛО / ПОРНО!
+# rot = 180, Press Start 2P.
+
+[[texture]]
+id = "0855"
+
+[[texture.op]]
+type = "erase"
+region = { box = [5, 101, 106, 115] }
+mask = { kind = "any", grow = 1, of = [ { kind = "colour", rgb = [253, 205, 12], tol = 70 }, { kind = "all", of = [ { kind = "luminance", max = 70 }, { kind = "near", of = { kind = "colour", rgb = [253, 205, 12], tol = 70 }, radius = 1 } ] } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "erase"
+region = { box = [5, 117, 95, 131] }
+mask = { kind = "any", grow = 1, of = [ { kind = "colour", rgb = [253, 205, 12], tol = 70 }, { kind = "all", of = [ { kind = "luminance", max = 70 }, { kind = "near", of = { kind = "colour", rgb = [253, 205, 12], tol = 70 }, radius = 1 } ] } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "erase"
+region = { box = [7, 147, 77, 161] }
+mask = { kind = "any", grow = 1, of = [ { kind = "colour", rgb = [253, 205, 12], tol = 70 }, { kind = "all", of = [ { kind = "luminance", max = 70 }, { kind = "near", of = { kind = "colour", rgb = [253, 205, 12], tol = 70 }, radius = 1 } ] } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "erase"
+region = { box = [7, 161, 104, 173] }
+mask = { kind = "any", grow = 1, of = [ { kind = "colour", rgb = [253, 205, 12], tol = 70 }, { kind = "all", of = [ { kind = "luminance", max = 70 }, { kind = "near", of = { kind = "colour", rgb = [253, 205, 12], tol = 70 }, radius = 1 } ] } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ПОЖАЛУЙСТА,"
+font = "Oswald.ttf"
+axes = { wght = 700 }
+fit = "fill_box"
+box = [7, 102, 104, 114]
+colour = [253, 205, 12]
+stroke = 1
+stroke_colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "БЕРЕГИТЕ ВОДУ!"
+font = "Oswald.ttf"
+axes = { wght = 700 }
+fit = "fill_box"
+box = [7, 118, 94, 130]
+colour = [253, 205, 12]
+stroke = 1
+stroke_colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "эй, вы,"
+font = "Oswald.ttf"
+axes = { wght = 700 }
+fit = "fill_box"
+box = [8, 148, 50, 160]
+colour = [253, 205, 12]
+stroke = 1
+stroke_colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "мелкие ублюдки"
+font = "Oswald.ttf"
+axes = { wght = 700 }
+fit = "fill_box"
+box = [8, 162, 103, 172]
+colour = [253, 205, 12]
+stroke = 1
+stroke_colour = [0, 0, 0]
+
+[[texture.op]]
+type = "erase"
+region = { box = [262, 399, 312, 428] }
+mask = { kind = "luminance", min = 200, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "НЛО"
+font = "PressStart2P-Regular.ttf"
+fit = "fit"
+box = [266, 412, 309, 426]
+rot = 180
+colour = [255, 255, 255]
+stroke = 1
+stroke_colour = [255, 255, 255]
+
+[[texture.op]]
+type = "text"
+text = "ПОРНО!"
+font = "PressStart2P-Regular.ttf"
+fit = "fit"
+box = [264, 400, 310, 410]
+rot = 180
+colour = [255, 255, 255]

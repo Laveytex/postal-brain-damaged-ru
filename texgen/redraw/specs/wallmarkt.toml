@@ -1,0 +1,260 @@
+# 1750 Wallmarkt signs: white sans text on blue/red/green panels, rotated 90° (reads bottom-to-top, rot = 90).
+# Two-line signs: the first reading line is the left column. Brand "Wallmarkt"/"Übercentre" and the logo are kept.
+# Font Segoe UI Semibold, colour = median of the original white lettering (214,223,231). Erase: thin strokes →
+# pull-push + grain sampled from a lettering-free part of the same panel.
+
+[[texture]]
+id = "1750"
+
+# Snacks
+[[texture.op]]
+type = "erase"
+region = { box = [22, 160, 46, 234] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [36, 151, 44, 167], sigma = 1.5, gain = 1.0, seed = 1751 }
+
+[[texture.op]]
+type = "text"
+text = "Снеки"
+font = "seguisb.ttf"
+fit = "fit"
+box = [27, 150, 43, 234]
+rot = 90
+colour = [214, 223, 231]
+
+# DISCOUNT (narrow strip next to the white frame: clone the sign's own red texture 20 px to the right, above and
+# below the arrow; pull-push only level with the arrow)
+[[texture.op]]
+type = "erase"
+region = { box = [73, 171, 86, 189] }
+mask = { kind = "luminance", min = 112, grow = 1 }
+method = "clone"
+offset = [20, 0]
+
+[[texture.op]]
+type = "erase"
+region = { box = [73, 189, 86, 214] }
+mask = { kind = "luminance", min = 112, grow = 1 }
+method = "pullpush"
+grain = { ref = [100, 172, 108, 188], sigma = 1.5, gain = 1.0, seed = 1752 }
+
+[[texture.op]]
+type = "erase"
+region = { box = [73, 214, 86, 235] }
+mask = { kind = "luminance", min = 112, grow = 1 }
+method = "clone"
+offset = [20, 0]
+
+[[texture.op]]
+type = "text"
+text = "СКИДКИ"
+font = "seguisb.ttf"
+fit = "fit"
+box = [74, 172, 86, 233]
+rot = 90
+colour = [214, 223, 231]
+
+# LOWPRICES
+[[texture.op]]
+type = "erase"
+region = { box = [133, 171, 170, 236] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [134, 178, 142, 194], sigma = 1.5, gain = 1.0, seed = 1753 }
+
+[[texture.op]]
+type = "text"
+text = "НИЗКИЕ\nЦЕНЫ"
+font = "seguisb.ttf"
+fit = "fit"
+box = [134, 172, 168, 233]
+rot = 90
+colour = [214, 223, 231]
+
+# Toys
+[[texture.op]]
+type = "erase"
+region = { box = [182, 186, 210, 233] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [190, 156, 198, 172], sigma = 1.5, gain = 1.0, seed = 1754 }
+
+[[texture.op]]
+type = "text"
+text = "Игрушки"
+font = "seguisb.ttf"
+fit = "fit"
+box = [184, 148, 208, 233]
+rot = 90
+colour = [214, 223, 231]
+
+# Checkouts
+[[texture.op]]
+type = "erase"
+region = { box = [235, 142, 257, 236] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [235, 171, 243, 187], sigma = 1.5, gain = 1.0, seed = 1755 }
+
+[[texture.op]]
+type = "text"
+text = "Кассы"
+font = "seguisb.ttf"
+fit = "fit"
+box = [240, 146, 254, 234]
+rot = 90
+colour = [214, 223, 231]
+
+# Furnishing
+[[texture.op]]
+type = "erase"
+region = { box = [183, 245, 210, 336] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [184, 300, 192, 316], sigma = 1.5, gain = 1.0, seed = 1756 }
+
+[[texture.op]]
+type = "text"
+text = "Мебель"
+font = "seguisb.ttf"
+fit = "fit"
+box = [185, 250, 208, 334]
+rot = 90
+colour = [214, 223, 231]
+
+# Bargain
+[[texture.op]]
+type = "erase"
+region = { box = [288, 152, 316, 232] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [288, 199, 296, 215], sigma = 1.5, gain = 1.0, seed = 1757 }
+
+[[texture.op]]
+type = "text"
+text = "Выгодно!"
+font = "seguisb.ttf"
+fit = "fit"
+box = [290, 152, 314, 231]
+rot = 90
+colour = [214, 223, 231]
+
+# GetToilet
+[[texture.op]]
+type = "erase"
+region = { box = [337, 173, 369, 237] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [358, 182, 366, 198], sigma = 1.5, gain = 1.0, seed = 1758 }
+
+[[texture.op]]
+type = "text"
+text = "Бери\nтуалетку"
+font = "seguisb.ttf"
+fit = "fit"
+box = [338, 173, 368, 236]
+rot = 90
+colour = [214, 223, 231]
+
+# Virus
+[[texture.op]]
+type = "erase"
+region = { box = [406, 168, 439, 238] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [414, 188, 422, 204], sigma = 1.5, gain = 1.0, seed = 1759 }
+
+[[texture.op]]
+type = "text"
+text = "вирус\nблизко!"
+font = "seguisb.ttf"
+fit = "fit"
+box = [407, 169, 438, 237]
+rot = 90
+colour = [214, 223, 231]
+
+# Grocery
+[[texture.op]]
+type = "erase"
+region = { box = [448, 153, 490, 233] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [482, 262, 490, 278], sigma = 1.5, gain = 1.0, seed = 1760 }
+
+[[texture.op]]
+type = "text"
+text = "Бакалея"
+font = "seguisb.ttf"
+fit = "fit"
+box = [455, 153, 484, 232]
+rot = 90
+colour = [214, 223, 231]
+
+# FishMeat
+[[texture.op]]
+type = "erase"
+region = { box = [288, 273, 330, 335] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [295, 258, 303, 274], sigma = 1.5, gain = 1.0, seed = 1761 }
+
+[[texture.op]]
+type = "text"
+text = "Рыба\nи мясо"
+font = "seguisb.ttf"
+fit = "fit"
+box = [289, 262, 329, 334]
+rot = 90
+colour = [214, 223, 231]
+
+# Dairy
+[[texture.op]]
+type = "erase"
+region = { box = [341, 280, 369, 334] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [348, 260, 356, 276], sigma = 1.5, gain = 1.0, seed = 1762 }
+
+[[texture.op]]
+type = "text"
+text = "Молочка"
+font = "seguisb.ttf"
+fit = "fit"
+box = [343, 262, 367, 334]
+rot = 90
+colour = [214, 223, 231]
+
+# Bakery
+[[texture.op]]
+type = "erase"
+region = { box = [394, 266, 422, 334] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [414, 300, 422, 316], sigma = 1.5, gain = 1.0, seed = 1763 }
+
+[[texture.op]]
+type = "text"
+text = "Выпечка"
+font = "seguisb.ttf"
+fit = "fit"
+box = [396, 262, 420, 334]
+rot = 90
+colour = [214, 223, 231]
+
+# Drinks
+[[texture.op]]
+type = "erase"
+region = { box = [447, 269, 470, 334] }
+mask = { kind = "all", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 90 } ] }
+method = "pullpush"
+grain = { ref = [457, 257, 465, 273], sigma = 1.5, gain = 1.0, seed = 1764 }
+
+[[texture.op]]
+type = "text"
+text = "Напитки"
+font = "seguisb.ttf"
+fit = "fit"
+box = [449, 262, 468, 334]
+rot = 90
+colour = [214, 223, 231]

@@ -1,0 +1,232 @@
+# 1012 TheFoilGuy_BC + 1897 destroyed: six cardboard placards, marker lettering. Identical layout in both textures
+# (offset 0, measured), so one group; erases evaluate each member's own pixels (blood spatter differs).
+# Hand-written look: Segoe Print Bold + glyph jitter (user pick 2026-10-17: brighter, more legible). Colours explicit: marker ink (48,38,32), red marker (200,64,52) — median-based auto
+# colour came out too pale.
+
+[[group]]
+id = "foil"
+space = [512, 512]
+
+[[group.member]]
+id = "1012"
+transform = { scale = 1, offset = [0, 0] }
+
+[[group.member]]
+id = "1897"
+transform = { scale = 1, offset = [0, 0] }
+
+# 1 EARTH / IS / FLAT / as yr mom (globe icon at x295-310 y9-26 kept)
+[[group.op]]
+type = "erase"
+id = "earth"
+region = { box = [245, 8, 293, 39] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [242, 33, 262, 39], sigma = 1.2, gain = 1.0, seed = 1201 }
+[[group.op]]
+type = "erase"
+id = "mom"
+region = { box = [262, 26, 320, 45] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [242, 33, 262, 39], sigma = 1.2, gain = 1.0, seed = 1202 }
+[[group.op]]
+type = "text"
+text = "ЗЕМЛЯ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 31 }
+fit = "fit"
+box = [248, 9, 291, 22]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "ПЛОСКАЯ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 32 }
+fit = "fit"
+box = [252, 24, 306, 38]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "как твоя мамка"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 33 }
+fit = "fit"
+box = [270, 38, 319, 45]
+colour = [48, 38, 32]
+
+# 2 THEY CONTROL / OUR BRAINS / wear a cap (eye icon at x293-302 y83-91 kept)
+[[group.op]]
+type = "erase"
+id = "brains"
+region = { box = [241, 58, 318, 82] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [296, 66, 316, 72], sigma = 1.2, gain = 1.0, seed = 1203 }
+[[group.op]]
+type = "erase"
+id = "cap"
+region = { box = [245, 82, 290, 92] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [296, 66, 316, 72], sigma = 1.2, gain = 1.0, seed = 1204 }
+[[group.op]]
+type = "text"
+text = "ОНИ УПРАВЛЯЮТ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 34 }
+fit = "fit"
+box = [242, 60, 317, 70]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "НАШИМИ МОЗГАМИ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 35 }
+fit = "fit"
+box = [242, 71, 317, 81]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "носи шапочку"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 36 }
+fit = "fit"
+box = [246, 83, 290, 91]
+colour = [48, 38, 32]
+
+# 3 STOP (red) / MICRO CHIPS (syringe drawing kept)
+[[group.op]]
+type = "erase"
+id = "stop"
+region = { box = [244, 102, 276, 114] }
+mask = { kind = "any", grow = 2, of = [ { kind = "channel_dominance", channel = "r", ratio = 1.15, min = 120 }, { kind = "all", of = [ { kind = "saturation", min = 45 }, { kind = "luminance", max = 150 } ] } ] }
+method = "pullpush"
+grain = { ref = [244, 100, 276, 104], sigma = 1.2, gain = 1.0, seed = 1205 }
+[[group.op]]
+type = "erase"
+id = "chips"
+region = { poly = [[278, 130], [290, 130], [290, 129], [310, 129], [310, 141], [278, 141]] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [244, 100, 276, 104], sigma = 1.2, gain = 1.0, seed = 1206 }
+[[group.op]]
+type = "text"
+text = "НЕТ"
+font = "segoeprb.ttf"
+jitter = { rotate = 6, shift = 0.10, scale = 0.10, seed = 41 }
+fit = "fit"
+box = [246, 104, 272, 116]
+colour = [200, 64, 52]
+[[group.op]]
+type = "text"
+text = "МИКРО-"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 38 }
+fit = "fit"
+box = [279, 129, 307, 135]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "ЧИПАМ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 39 }
+fit = "fit"
+box = [282, 135, 309, 141]
+colour = [48, 38, 32]
+
+# 4 WE / KNOW / THE TRUTH (red) (alien at x291-312 y156-180 kept)
+[[group.op]]
+type = "erase"
+id = "know"
+region = { box = [241, 160, 290, 183] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [242, 156, 262, 162], sigma = 1.2, gain = 1.0, seed = 1207 }
+[[group.op]]
+type = "erase"
+id = "truth"
+region = { box = [245, 183, 313, 192] }
+mask = { kind = "any", grow = 2, of = [ { kind = "channel_dominance", channel = "r", ratio = 1.15, min = 120 }, { kind = "all", of = [ { kind = "saturation", min = 45 }, { kind = "luminance", max = 150 } ] } ] }
+method = "pullpush"
+grain = { ref = [242, 156, 262, 162], sigma = 1.2, gain = 1.0, seed = 1208 }
+[[group.op]]
+type = "text"
+text = "МЫ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 40 }
+fit = "fit"
+box = [256, 161, 284, 171]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "ЗНАЕМ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 41 }
+fit = "fit"
+box = [243, 172, 289, 182]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "ПРАВДУ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 42 }
+fit = "fill_box"
+box = [247, 183, 312, 192]
+colour = [200, 64, 52]
+
+# 5 REPTILIANS (crossed lizard icon right below kept)
+[[group.op]]
+type = "erase"
+id = "rept"
+region = { poly = [[247, 207], [307, 207], [307, 214], [264, 214], [264, 216], [247, 216]] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [299, 226, 319, 232], sigma = 1.2, gain = 1.0, seed = 1209 }
+[[group.op]]
+type = "text"
+text = "РЕПТИЛОИДЫ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 43 }
+fit = "fit"
+box = [249, 207, 306, 214]
+colour = [48, 38, 32]
+
+# 6 BIG DICK / OWNER (arrow below kept)
+[[group.op]]
+type = "erase"
+id = "owner"
+region = { box = [244, 261, 318, 283] }
+mask = { kind = "luminance", max = 115, grow = 1 }
+method = "pullpush"
+grain = { ref = [294, 284, 314, 290], sigma = 1.2, gain = 1.0, seed = 1210 }
+[[group.op]]
+type = "text"
+text = "ВЛАДЕЛЕЦ"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 44 }
+fit = "fit"
+box = [256, 262, 306, 271]
+colour = [48, 38, 32]
+[[group.op]]
+type = "text"
+text = "БОЛЬШОГО ЧЛЕНА"
+font = "segoeprb.ttf"
+jitter = { rotate = 10, shift = 0.12, scale = 0.12, seed = 45 }
+fit = "fit"
+box = [244, 272, 318, 283]
+colour = [48, 38, 32]
+
+[[texture]]
+id = "1012"
+
+[[texture.op]]
+type = "use_group"
+group = "foil"
+
+[[texture]]
+id = "1897"
+
+[[texture.op]]
+type = "use_group"
+group = "foil"

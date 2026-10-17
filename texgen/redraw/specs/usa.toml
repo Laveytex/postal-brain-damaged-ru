@@ -1,0 +1,52 @@
+# 0347 USA #1 -> США №1 on a black background. С = the original navy U with stars turned 90° clockwise (asset
+# 0347-src.png = RGBA copy of the original texture in the ignored assets/), Ш and № in Bookman Old Style Bold,
+# colours sampled from the original S (199,196,192) and # (217,128,11). A is kept.
+
+[[texture]]
+id = "0347"
+
+[[texture.op]]
+type = "erase"
+region = { box = [84, 18, 196, 101] }
+mask = { kind = "luminance", min = 6, grow = 1 }
+method = "flat"
+colour = [0, 0, 0]
+
+[[texture.op]]
+type = "asset"
+path = "0347-src.png"
+crop = [86, 21, 194, 99]
+key = { colour = [0, 0, 0], tolerance = 8, softness = 20 }
+rot = 270
+fit = "fill_box"
+box = [94, 24, 186, 96]
+
+[[texture.op]]
+type = "erase"
+region = { box = [200, 16, 291, 99] }
+mask = { kind = "luminance", min = 6, grow = 1 }
+method = "flat"
+colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "Ш"
+font = "BOOKOSB.TTF"
+fit = "fill_box"
+box = [200, 22, 290, 95]
+colour = [199, 196, 192]
+
+[[texture.op]]
+type = "erase"
+region = { box = [188, 424, 262, 506] }
+mask = { kind = "luminance", min = 6, grow = 1 }
+method = "flat"
+colour = [0, 0, 0]
+
+[[texture.op]]
+type = "text"
+text = "№"
+font = "BOOKOSB.TTF"
+fit = "fit"
+box = [180, 430, 264, 502]
+colour = [217, 128, 11]
