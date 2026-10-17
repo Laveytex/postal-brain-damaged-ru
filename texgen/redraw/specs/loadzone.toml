@@ -1,0 +1,33 @@
+# 0186 Load zone: LOAD | ZONE in dark brown (41,24,0) on a yellow diamond, hourglass between them; each slot ≈ 25×8 px.
+# «ЗОНА ЗАГРУЗКИ» does not fit legibly → «ЗОНА | ГРУЗА» (user's pick 2026-10-17). Arial Narrow Bold stretched to the slot.
+
+[[texture]]
+id = "0186"
+
+[[texture.op]]
+type = "erase"
+region = { box = [23, 70, 51, 80] }
+mask = { kind = "luminance", max = 90, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "erase"
+region = { box = [74, 70, 97, 80] }
+mask = { kind = "luminance", max = 90, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ЗОНА"
+font = "ARIALNB.TTF"
+fit = "fill_box"
+box = [24, 71, 50, 79]
+colour = [41, 24, 0]
+
+[[texture.op]]
+type = "text"
+text = "ГРУЗА"
+font = "ARIALNB.TTF"
+fit = "fill_box"
+box = [75, 71, 96, 79]
+colour = [41, 24, 0]
