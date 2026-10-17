@@ -86,6 +86,9 @@ def apply(rgb, op, domain):
         result = pullpush(rgb, selected)
         if op.get("grain"):
             result = regrain(result,rgb,selected,op["grain"])
+    elif method == "patch":
+        from .patch import reconstruct
+        result = reconstruct(rgb, selected, domain, op)
     elif method == "clone":
         dx,dy = op.get("offset", [0,0])
         yy,xx = np.nonzero(selected)

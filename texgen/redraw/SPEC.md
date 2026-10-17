@@ -148,6 +148,85 @@ well as the coloured letter itself.
 * `clone`: `offset=[dx,dy]` samples from `(x+dx,y+dy)` in the current image snapshot;
   `feather=0` optionally ramps coverage by distance from the selected boundary.
   Out-of-image source coordinates fail; they never wrap around.
+* `patch`: multiscale PatchMatch nearest-neighbour search and weighted overlapping
+  patch voting, for photos and patterned backgrounds. Only selected mask pixels
+  change. Parameters belong directly to the erase op:
+
+  ```toml
+  [[texture.op]]
+  type = "erase"
+  method = "patch"
+  region = { box = [100, 80, 160, 140] }
+  mask = { kind = "all" }
+  patch = 7
+  iterations = 5
+  em = 3
+  seed = 0
+  margin = 48
+  # Optional donor boxes; otherwise the region is dilated by margin pixels.
+  source = [[20, 20, 200, 200]]
+  exclude = [[170, 40, 190, 100]]
+  ```
+
+  `patch` is an odd integer from 3 through 15; `iterations` is 1–20, `em` is
+  1–10, `seed` and `margin` are nonnegative integers. Defaults are shown above.
+  Source/exclusion boxes use integer pixel coordinates inside the image. Their
+  union is evaluated before footprint testing: adjacent source boxes may jointly
+  contain a patch. Every pixel of a donor footprint must be inside that union,
+  outside all exclusion boxes, and outside the current erase mask. No valid
+  footprint is a `SpecError`; the actual mask is checked at execution time so
+  earlier ops are respected. Geometry-only donor feasibility is also preflighted
+  when loading the spec. These parameters are rejected on other erase methods.
+
+  Default source dilation uses a square neighbourhood around the rasterised
+  region, clipped at image edges. Effective margin is clamped to the largest
+  image side before dilation and context-window calculation; larger margins
+  cannot add pixels and never create an unbounded filter. Target patches can read
+  known context outside the region. Full donor footprints are accessible even in distant source boxes;
+  source restrictions govern donation, not target/context reads. There are no
+  writes outside the erase mask and no alpha edits.
+
+  The pyramid uses a 2×2 box filter (real children only at odd image edges), the
+  same patch side at every level, any-child hole masks and all-child source
+  eligibility. Thus masked/excluded pixels cannot leak into coarse donors.
+  Pyramid depth measures hole **thickness**, stopping when maximum distance to
+  actual known pixels is at most 8 pixels (about 16 pixels across), rather than
+  shrinking the overall lettering bbox to 16 pixels. A proposed coarser level
+  is rejected only if it has no valid donors. Hole density does not suppress
+  the pyramid for large solid erases. The context window is the hole bbox
+  expanded by the scaled, clamped margin, with at least a patch radius plus one
+  pixel of context. Distance calculations treat outside-image
+  pixels as unknown; they cannot invent a known border.
+
+  Coarse NNF coordinates and filled pixels initialise finer levels. Matching
+  first uses only actual known samples; wholly unknown patches compare mean RGB
+  instead of rewarding low donor variance against a smooth initial estimate.
+  Later EM rounds use unknown-pixel weights 0.1, then 0.35, relative to known
+  samples' weight 1. Each EM round alternates propagation and shrinking random
+  search with votes weighted by error and distance from known context.
+  Voting averages donor low frequencies, then adds the high-frequency band of
+  the highest-confidence covering donor patch. This preserves source grain
+  rather than cancelling it by averaging unrelated detail. The low/high split
+  uses a Gaussian sigma of 1.5 pixels, reflected **within each valid footprint**:
+  no excluded/out-of-source pixel contributes to either band. No noise is
+  generated. Randomness uses a private NumPy generator per erase.
+
+  Donors use an integral-image footprint index. Search and voting process only
+  target patches overlapping the hole. Costs, propagation, initialisation and
+  voting use batches of at most 256 target patches, reduced further so a batch
+  contains at most 65,536 patch samples. Coordinates are int32; there are no
+  whole-target-domain arrays with a patch-area dimension. NNF, scores, confidence,
+  hole votes and image/index/pyramid storage remain proportional to their domains.
+  A mapped patch side above 255 is rejected with a clear memory-cap `SpecError`
+  before footprint expansion. Distant or large source areas do not become
+  matching targets. This is exemplar synthesis, not semantic reconstruction;
+  photos still require the planned visual review.
+
+  Group erases map source/exclusion boxes by the member transform using the same
+  pixel-centre geometry rules. Patch side scales to the nearest odd integer at
+  least 3 (ties upward); a mapped side may exceed 15 when enlarged, up to the
+  documented memory cap of 255. Margin scales and rounds to integer pixels.
+  Each member validates its own donor footprints.
 
 Every erase records median selected RGB when it has an `id`. Optional
 `paint={colour=70, stroke_colour=15}` instead samples the upper/lower luminance

@@ -100,6 +100,16 @@ def scaled_erase(op, space, tr, size, where):
         return mapped
     if "sample" in out:
         out["sample"] = sample_box(out["sample"],"sample")
+    if out.get("method") == "patch":
+        for key in ("source", "exclude"):
+            if key in out:
+                out[key] = [compose.map_geometry({"box":box},space,tr)["box"] for box in out[key]]
+                for box in out[key]:
+                    geometry({"box":box},size,f"{where}/{key}")
+        # Nearest odd, ties toward the larger odd. A mapped patch is allowed
+        # to exceed the spec's 15-pixel authoring limit when scaling upward.
+        out["patch"] = max(3, 2*math.floor(op.get("patch", 7)*s/2)+1)
+        out["margin"] = round(op.get("margin", 48)*s)
     if "grain" in out:
         out["grain"]["ref"] = sample_box(out["grain"]["ref"],"grain.ref")
         out["grain"]["sigma"] = out["grain"].get("sigma",2)*s
@@ -373,7 +383,7 @@ def build(paths, source_root, only=None, out=None, previews=None):
                     warnings.extend(ww)
                     rgb = draw(rgb,fill,asset,op,allowed,paints,warnings,quad_frame=rendered.quad_frame)
             except (ValueError,KeyError,TypeError,OSError) as exc:
-                raise SpecError(f"texture {tid}/op[{index}]: {exc}") from exc
+                raise SpecError(f"{project.origins['texture',tid]}/texture {tid}/op[{index}]: {exc}") from exc
         result = arr.copy()
         result[...,:3] = np.rint(rgb).astype(np.uint8)
         if np.any(result[~allowed]!=arr[~allowed]):

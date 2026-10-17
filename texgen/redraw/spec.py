@@ -220,6 +220,29 @@ def text_effects(op, where):
             raise SpecError(f"{loc}/colour: only 'fill' is supported")
 
 
+def patch_options(op, size, where):
+    for key, default, low, high in (("patch", 7, 3, 15), ("iterations", 5, 1, 20),
+                                   ("em", 3, 1, 10), ("seed", 0, 0, None),
+                                   ("margin", 48, 0, None)):
+        number(op.get(key, default), where+"/"+key, low, high, integer=True)
+    if op.get("patch", 7) % 2 != 1:
+        raise SpecError(f"{where}/patch: patch side must be odd")
+    for key in ("source", "exclude"):
+        if key in op:
+            if not isinstance(op[key], list):
+                raise SpecError(f"{where}/{key}: expected array of boxes")
+            for box in op[key]:
+                pixel_box(box, size, where+"/"+key)
+    # Geometry-only preflight. Actual mask eligibility is checked against the
+    # current pixels at execution time, after all preceding ordered operations.
+    from . import masks
+    from .patch import source_pixels, donor_index
+    domain = masks.region(size, op["region"])
+    allowed = source_pixels(domain.shape, domain, op)
+    if not len(donor_index(allowed, int(op.get("patch", 7)))[0]):
+        raise SpecError(f"{where}: source minus exclude contains no valid whole donor footprint")
+
+
 def operations(ops, size, where, in_group=False):
     previous, erase_ids = set(), {}
     dependencies = set()
@@ -242,13 +265,18 @@ def operations(ops, size, where, in_group=False):
                 previous.add(op["id"])
             paint_reference(op, erase_ids, loc)
             if typ == "erase":
-                keys(op,"type id region mask method core colour sample grain offset feather paint",loc)
+                keys(op,"type id region mask method core colour sample grain offset feather paint patch iterations em seed source exclude margin",loc)
                 geometry(op["region"],size,loc)
                 mask(op.get("mask",{"kind":"all"}),loc)
                 if "core" in op:
                     mask(op["core"],loc+"/core")
-                if op.get("method") not in ("flat","pullpush","untint","clone"):
+                if op.get("method") not in ("flat","pullpush","untint","clone","patch"):
                     raise SpecError("invalid erase method")
+                patch_keys = set("patch iterations em seed source exclude margin".split())
+                if op.get("method") != "patch" and patch_keys.intersection(op):
+                    raise SpecError("patch parameters require method = 'patch'")
+                if op.get("method") == "patch":
+                    patch_options(op, size, loc)
                 if "colour" in op:
                     colour(op["colour"],loc)
                 if "sample" in op:
