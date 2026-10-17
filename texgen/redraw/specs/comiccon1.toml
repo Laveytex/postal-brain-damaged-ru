@@ -1,0 +1,364 @@
+# 0941 ComicCon posters 1. Translated only on plain backgrounds (user decision 2026-10-17): FLUFFY FRIENDS FESTIVAL O' FUN
+# (italic on a cyan gradient; FESTIVAL red) → ВЕСЁЛЫЙ ФЕСТИВАЛЬ ПУШИСТЫХ ДРУЗЕЙ as three words with one common squeeze and
+# baseline (Arial Narrow Bold Italic — real Cyrillic italic, soft dark-teal drop shadow; the cyan banner is a plain gradient, so the letters plus a
+# 9 px margin (old soft shadow) are erased and rebuilt by pull-push; boxes include the shadow extent); SORRY / THE GAME IS POSTPONED (marker on yellow, five copies,
+# four with a red/green "glitch") → ИЗВИНИТЕ / ИГРА ПЕРЕНЕСЕНА in Ink Free (glitch = green copy −2 px, red copy +2 px,
+# dark core). Kept in English: DAMN! HOLY SHIT (over artwork), IT TAKES FIVE (allowed by ТЗ), game titles.
+
+[[texture]]
+id = "0941"
+
+[[texture.op]]
+type = "erase"
+region = { box = [440, 86, 842, 150] }
+mask = { kind = "near", radius = 9, of = { kind = "any", of = [ { kind = "colour", rgb = [233, 236, 37], tol = 70 }, { kind = "colour", rgb = [255, 58, 38], tol = 80 } ] } }
+method = "pullpush"
+grain = { ref = [440, 136, 470, 146], sigma = 1.5, gain = 0.8, seed = 9411 }
+
+[[texture.op]]
+type = "text"
+text = "ВЕСЁЛЫЙ"
+font = "ARIALNBI.TTF"
+fit = "fill_box"
+box = [448.0, 98.5, 542.3, 135.3]
+colour = [233, 236, 37]
+stroke = 1
+stroke_colour = [233, 236, 37]
+shadow = { dx = 2, dy = 4, blur = 2, colour = [40, 80, 72], opacity = 0.75 }
+region = { box = [440, 86, 842, 150] }
+
+[[texture.op]]
+type = "text"
+text = "ФЕСТИВАЛЬ"
+font = "ARIALNBI.TTF"
+fit = "fill_box"
+box = [540.3, 103.7, 653.5, 135.3]
+colour = [255, 58, 38]
+stroke = 1
+stroke_colour = [255, 58, 38]
+shadow = { dx = 2, dy = 4, blur = 2, colour = [40, 80, 72], opacity = 0.75 }
+region = { box = [440, 86, 842, 150] }
+
+[[texture.op]]
+type = "text"
+text = "ПУШИСТЫХ ДРУЗЕЙ"
+font = "ARIALNBI.TTF"
+fit = "fill_box"
+box = [651.5, 98.5, 834.0, 140.8]
+colour = [233, 236, 37]
+stroke = 1
+stroke_colour = [233, 236, 37]
+shadow = { dx = 2, dy = 4, blur = 2, colour = [40, 80, 72], opacity = 0.75 }
+region = { box = [440, 86, 842, 150] }
+
+# --- SORRY banner (plain marker) ---
+[[texture.op]]
+type = "erase"
+region = { box = [446, 158, 770, 205] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [452, 156, 545, 178]
+colour = [25, 25, 15]
+stroke = 1
+stroke_colour = [25, 25, 15]
+
+[[texture.op]]
+type = "text"
+text = "ИГРА ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fill_box"
+box = [453, 186, 700, 203]
+colour = [25, 25, 15]
+stroke = 1
+stroke_colour = [25, 25, 15]
+
+# --- glitch copies ---
+[[texture.op]]
+type = "erase"
+region = { box = [18, 562, 104, 590] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [20, 564, 110, 587]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [24, 566, 114, 589]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [22, 565, 112, 588]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "erase"
+region = { box = [320, 482, 398, 512] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [320, 485, 412, 508]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [324, 487, 416, 510]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [322, 486, 414, 509]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "erase"
+region = { box = [842, 524, 946, 559] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [846, 526, 960, 555]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [850, 528, 964, 557]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [848, 527, 962, 556]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "erase"
+region = { box = [840, 562, 1008, 612] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИГРА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [845, 565, 923, 586]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИГРА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [849, 567, 927, 588]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИГРА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [847, 566, 925, 587]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "text"
+text = "ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [845, 588, 1002, 609]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [849, 590, 1006, 611]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [847, 589, 1004, 610]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "erase"
+region = { box = [259, 740, 338, 766] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [262, 742, 350, 763]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [266, 744, 354, 765]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [264, 743, 352, 764]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "erase"
+region = { box = [262, 766, 385, 804] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИГРА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [266, 768, 320, 784]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИГРА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [270, 770, 324, 786]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИГРА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [268, 769, 322, 785]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "text"
+text = "ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [266, 785, 379, 801]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [270, 787, 383, 803]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ПЕРЕНЕСЕНА"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [268, 786, 381, 802]
+colour = [30, 30, 20]
+opacity = 0.55
+
+[[texture.op]]
+type = "erase"
+region = { box = [272, 892, 358, 919] }
+mask = { kind = "any", grow = 1, of = [ { kind = "saturation", max = 200 }, { kind = "channel_dominance", channel = "r", ratio = 1.3 }, { kind = "channel_dominance", channel = "g", ratio = 1.3 } ] }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [276, 894, 370, 916]
+colour = [60, 220, 60]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [280, 896, 374, 918]
+colour = [225, 40, 40]
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "Inkfree.ttf"
+fit = "fit"
+box = [278, 895, 372, 917]
+colour = [30, 30, 20]
+opacity = 0.55
+
+# --- cut-off "SORRY" on the blue strip under the banner (white pixel letters, bottom cut by the strip edge) ---
+[[texture.op]]
+type = "erase"
+region = { box = [428, 221, 506, 233] }
+mask = { kind = "luminance", min = 170, grow = 1 }
+method = "pullpush"
+
+[[texture.op]]
+type = "text"
+text = "ИЗВИНИТЕ"
+font = "PressStart2P-Regular.ttf"
+fit = "fit"
+box = [431, 219, 545, 239]
+region = { box = [428, 218, 545, 233] }
+clip = true
+colour = [255, 255, 255]

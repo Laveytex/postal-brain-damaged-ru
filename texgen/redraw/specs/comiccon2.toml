@@ -1,0 +1,69 @@
+# 0689 ComicCon posters 2. (1) ILLUMINATI / ACCESS / ONLY — red (253,1,1) monospace on a dark grey (33) plate →
+# ТОЛЬКО / ДЛЯ / ИЛЛЮМИНАТОВ, Consolas Bold. (2) Leon Dusk poster: MEETUP WITH / LEON DUSK / CONFERENCE HALL / 3:33 am —
+# white heavy italic with a dark-red drop shadow over grey + red rays → ВСТРЕЧА С / ЛЕОНОМ ДАСКОМ / КОНФЕРЕНЦ-ЗАЛ /
+# 3:33 НОЧИ, Segoe UI Black Italic. Kept in English: faint FUTURE IS NOW behind Leon (over artwork), game titles.
+
+[[texture]]
+id = "0689"
+
+[[texture.op]]
+type = "erase"
+region = { box = [616, 156, 734, 222] }
+mask = { kind = "channel_dominance", channel = "r", ratio = 1.5, min = 60, grow = 1 }
+method = "pullpush"
+grain = { ref = [616, 222, 640, 232], sigma = 1.2, gain = 1.0, seed = 6891 }
+
+[[texture.op]]
+type = "text"
+text = "ТОЛЬКО\nДЛЯ\nИЛЛЮМИНАТОВ"
+font = "consolab.ttf"
+fit = "fit"
+box = [616, 158, 734, 220]
+spacing = 0.95
+colour = [253, 1, 1]
+
+[[texture.op]]
+type = "erase"
+region = { box = [66, 684, 440, 906] }
+mask = { kind = "any", grow = 1, of = [ { kind = "all", of = [ { kind = "luminance", min = 200 }, { kind = "saturation", max = 50 } ] }, { kind = "all", of = [ { kind = "luminance", max = 60 }, { kind = "near", of = { kind = "all", of = [ { kind = "luminance", min = 200 }, { kind = "saturation", max = 50 } ] }, radius = 6 } ] } ] }
+method = "patch"
+patch = 9
+seed = 6892
+source = [[20, 600, 470, 960]]
+exclude = [[440, 560, 1024, 1024]]
+
+[[texture.op]]
+type = "text"
+text = "ВСТРЕЧА С"
+font = "seguibli.ttf"
+fit = "fit"
+box = [110, 688, 380, 718]
+colour = [255, 255, 255]
+shadow = { dx = 3, dy = 3, blur = 0, colour = [44, 6, 6], opacity = 1 }
+
+[[texture.op]]
+type = "text"
+text = "ЛЕОНОМ ДАСКОМ"
+font = "seguibli.ttf"
+fit = "fit"
+box = [68, 732, 432, 782]
+colour = [255, 255, 255]
+shadow = { dx = 3, dy = 3, blur = 0, colour = [44, 6, 6], opacity = 1 }
+
+[[texture.op]]
+type = "text"
+text = "КОНФЕРЕНЦ-ЗАЛ"
+font = "seguibli.ttf"
+fit = "fit"
+box = [86, 843, 396, 874]
+colour = [255, 255, 255]
+shadow = { dx = 3, dy = 3, blur = 0, colour = [44, 6, 6], opacity = 1 }
+
+[[texture.op]]
+type = "text"
+text = "3:33 НОЧИ"
+font = "seguibli.ttf"
+fit = "fit"
+box = [168, 877, 316, 902]
+colour = [255, 255, 255]
+shadow = { dx = 3, dy = 3, blur = 0, colour = [44, 6, 6], opacity = 1 }

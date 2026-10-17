@@ -1,0 +1,42 @@
+# 1651 The Wall elements: "US BORDER" in off-white paint (198,179,170) on a rusty panel, rotated 90° (reads bottom-to-top).
+# → США (big, where "US" was) / ГРАНИЦА (where "BORDER" was) — user's pick 2026-10-17 (variant 1). Look of a sloppy
+# hand-painted sign: Comic Sans Bold + strong glyph jitter + 4 px same-colour stroke (fat brush), modulate=true keeps
+# the rust grain in the paint. Erase: patch from the rusty panel. Flag on the right kept.
+
+[[texture]]
+id = "1651"
+
+[[texture.op]]
+type = "erase"
+region = { box = [1540, 1400, 1748, 1730] }
+mask = { kind = "all", grow = 2, of = [ { kind = "luminance", min = 140 }, { kind = "saturation", max = 75 } ] }
+method = "patch"
+patch = 9
+seed = 1651
+source = [[1505, 1385, 1758, 1755]]
+
+[[texture.op]]
+type = "text"
+text = "США"
+font = "comicbd.ttf"
+jitter = { rotate = 9, shift = 0.12, scale = 0.16, seed = 16511 }
+stroke = 4
+stroke_colour = [205, 188, 178]
+fit = "fill_box"
+box = [1547, 1462, 1653, 1662]
+rot = 90
+colour = [205, 188, 178]
+modulate = true
+
+[[texture.op]]
+type = "text"
+text = "ГРАНИЦА"
+font = "comicbd.ttf"
+jitter = { rotate = 9, shift = 0.12, scale = 0.16, seed = 16512 }
+stroke = 4
+stroke_colour = [205, 188, 178]
+fit = "fill_box"
+box = [1667, 1410, 1741, 1721]
+rot = 90
+colour = [205, 188, 178]
+modulate = true
