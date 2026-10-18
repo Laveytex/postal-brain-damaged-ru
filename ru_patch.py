@@ -10,7 +10,7 @@
 Steam «Проверить целостность файлов» тоже возвращает оригиналы."""
 import os, sys, json, struct, shutil, time, re, base64, subprocess, hashlib
 
-VERSION = "1.2.0-dev"
+VERSION = "1.2.0"
 GAME_DIR_NAME = "POSTAL Brain Damaged"
 DATA_NAME = "POSTAL Brain Damaged_Data"
 GAME_EXE = "POSTAL Brain Damaged.exe"

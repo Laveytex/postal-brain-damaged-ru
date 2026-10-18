@@ -21,3 +21,7 @@ texgen/redraw/preview/
 texgen/redraw/deliver-log.jsonl
 texgen/redraw/fonts/*.ttf
 texgen/redraw/assets/
+
+# накладки текстур собираются из графики игры (ГОТОВО) — в репозиторий не кладём
+texgen/out/*
+!texgen/out/.gitkeep
