@@ -11,7 +11,7 @@
 ## Установка
 
 1. Закрой игру.
-2. Скачай `ru_patch_v1.2.0.zip` из [Releases](../../releases) и распакуй куда угодно.
+2. Скачай архив `ru_patch_v….zip` из [последнего релиза](https://github.com/Laveytex/postal-brain-damaged-ru/releases/latest) и распакуй куда угодно.
 3. Запусти `ru_patch.exe`, нажми **1** и Enter. Игра находится автоматически через Steam (или положи `ru_patch.exe` в папку игры). Установка занимает 3–5 минут.
 4. В игре: **Settings → Language → «Русский»**.
 
@@ -62,8 +62,6 @@ python tools/check_ru.py
 ```
 
 Стиль и термины перевода — в [GLOSSARY.md](GLOSSARY.md). Правки и замечания — через Issues / Pull requests.
-
-Публикация в Steam Workshop (для автора) — [steam_workshop/README_WORKSHOP.md](steam_workshop/README_WORKSHOP.md).
 
 ## Автор и лицензия
 

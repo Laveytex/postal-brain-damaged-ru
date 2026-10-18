@@ -6,11 +6,6 @@ tools/loc_dump.json
 tools/report.txt
 *.zip
 
-# Steam Workshop: собранный патчер, временные файлы и SteamCMD (в его папке хранятся токены входа!)
-steam_workshop/content/*.exe
-steam_workshop/build/
-steam_workshop/steamcmd/
-ssfn*
 
 # превью сборки шрифтов содержат глифы игры
 fontgen/preview/
