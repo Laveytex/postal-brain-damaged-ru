@@ -1,0 +1,65 @@
+# 1438 Neighbourhood atlas: two "Blue Key" billboards. The "Blue Key" logo stays in English (user decision
+# 2026-10-17: it sits on a sunburst whose colours equal the lettering's, so it cannot be erased cleanly); likewise
+# "There you go!" on the right sign stays English (user 2026-10-18: translate only the plain red-band texts).
+# Left sign: JUST AROUND / THE CORNER (cream 232,217,178, dark drop shadow 40,16,16) on the red arrow band →
+# ПРЯМО / ЗА УГЛОМ; KILL & / STEAL (pink 228,99,92, shadow 137,12,12) → УБЕЙ И / УКРАДИ; ONLY (white, dark outline,
+# tilted) → ВСЕГО. Price digits kept. Segoe UI Black Italic. Erase: patch for the cream lettering on the arrow band (key excluded); pull-push + grain
+# for the thin pink/white lettering on the shaded starburst (keeps its gradient).
+
+[[texture]]
+id = "1438"
+
+[[texture.op]]
+type = "erase"
+region = { box = [88, 1528, 333, 1611] }
+mask = { kind = "any", grow = 1, of = [ { kind = "luminance", min = 135 }, { kind = "all", of = [ { kind = "luminance", max = 60 }, { kind = "near", of = { kind = "luminance", min = 135 }, radius = 7 } ] } ] }
+method = "patch"
+patch = 9
+seed = 14381
+source = [[10, 1528, 445, 1625]]
+exclude = [[318, 1450, 446, 1625]]
+
+[[texture.op]]
+type = "text"
+text = "ПРЯМО ЗА\nУГЛОМ"
+font = "seguibli.ttf"
+fit = "fit"
+box = [92, 1531, 330, 1606]
+spacing = 0.9
+colour = [232, 217, 178]
+shadow = { dx = 3, dy = 3, blur = 0, colour = [40, 16, 16], opacity = 1 }
+
+[[texture.op]]
+type = "erase"
+region = { box = [446, 1524, 562, 1601] }
+mask = { kind = "any", grow = 1, of = [ { kind = "colour", rgb = [228, 99, 92], tol = 48 }, { kind = "all", of = [ { kind = "luminance", max = 66 }, { kind = "near", of = { kind = "colour", rgb = [228, 99, 92], tol = 48 }, radius = 5 } ] } ] }
+method = "pullpush"
+grain = { ref = [452, 1600, 500, 1612], sigma = 1.5, gain = 1.0, seed = 14382 }
+
+[[texture.op]]
+type = "text"
+text = "УБЕЙ И\nУКРАДИ"
+font = "seguibli.ttf"
+fit = "fit"
+box = [448, 1527, 558, 1597]
+spacing = 0.9
+colour = [228, 99, 92]
+shadow = { dx = 2, dy = 2, blur = 0, colour = [137, 12, 12], opacity = 1 }
+
+[[texture.op]]
+type = "erase"
+region = { poly = [[573, 1518], [612, 1518], [612, 1542], [595, 1542], [595, 1547], [573, 1547]] }
+mask = { kind = "any", grow = 1, of = [ { kind = "luminance", min = 140 }, { kind = "all", of = [ { kind = "luminance", max = 55 }, { kind = "near", of = { kind = "luminance", min = 140 }, radius = 3 } ] } ] }
+method = "pullpush"
+grain = { ref = [452, 1600, 500, 1612], sigma = 1.5, gain = 1.0, seed = 14383 }
+
+[[texture.op]]
+type = "text"
+text = "ВСЕГО"
+font = "seguibli.ttf"
+fit = "fit"
+box = [574, 1519, 610, 1542]
+angle = 15
+colour = [231, 211, 206]
+stroke = 1
+stroke_colour = [36, 10, 12]
