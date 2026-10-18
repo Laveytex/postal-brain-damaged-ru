@@ -1,4 +1,7 @@
-# 1673 Food truck: KROTCHY'S logo -> КРОЧЧИ (ChatGPT lettering sheet postal-ru-krotchy), MENU -> МЕНЮ.
+# 1673 Food truck: KROTCHY'S logo -> КРОЧЧИ, MENU -> МЕНЮ. Sign (user pick 2026-10-18, variant 1): whole old sign
+# erased; thin wire frame behind (asset 1673-wire.png from host helper make_wire.py, colour of the original wires);
+# Comic Sans Bold yellow (247,186,12) with brown outline, jitter, stretched over the original rising quad.
+# In game the sign is an alpha cut-out: the delivered PNG gets its alpha from host helper fix_alpha.py.
 # The "SECRET…" graffiti is not in ТЗ and stays.
 
 [[texture]]
@@ -6,17 +9,27 @@ id = "1673"
 
 [[texture.op]]
 type = "erase"
-region = { box = [4, 2, 204, 61] }
-mask = { kind = "saturation", min = 45, grow = 2 }
+region = { poly = [[6, 0], [214, 0], [214, 47], [190, 47], [186, 52], [180, 52], [180, 66], [6, 66]] }
+mask = { kind = "all" }
 method = "flat"
 colour = [0, 0, 0]
 
 [[texture.op]]
 type = "asset"
-path = "postal-ru-krotchy.png"
-crop = [46, 303, 1490, 699]
-fit = "fit"
-box = [6, 4, 201, 58]
+path = "1673-wire.png"
+fit = "fixed"
+box = [6, 9, 211, 50]
+
+[[texture.op]]
+type = "text"
+text = "КРОЧЧИ"
+font = "comicbd.ttf"
+fit = "fill_box"
+quad = [[6, 24], [206, 2], [206, 46], [6, 68]]
+jitter = { rotate = 6, shift = 0.07, scale = 0.08, seed = 7 }
+colour = [247, 186, 12]
+stroke = 2
+stroke_colour = [69, 42, 20]
 
 [[texture.op]]
 type = "erase"

@@ -1,4 +1,5 @@
-# 0629_Hospital_Blood: blood lettering on white -> Russian (Rubik Wet Paint, dark red, multiply on white).
+# 0629_Hospital_Blood: blood lettering on white -> Russian (Unutterable + jitter, dark red, multiply on white).
+# No drips (user 2026-10-18: drips looked cringe, plain text only).
 # The painted eye (x >= 413) and the splatters around stay untouched.
 
 [[texture]]
@@ -31,7 +32,6 @@ box = [292, 296, 408, 349]
 colour = [128, 14, 10]
 blend = "multiply"
 jitter = { rotate = 11.0, shift = 0.10, scale = 0.14, seed = 21 }
-drips = { count = 1.0, length = [0.15, 0.6], width = [0.12, 0.2], seed = 4, colour = "fill" }
 stroke = 0.9
 stroke_colour = [118, 13, 9]
 
@@ -46,6 +46,5 @@ box = [180, 434, 279, 480]
 colour = [110, 12, 8]
 blend = "multiply"
 jitter = { rotate = 11.0, shift = 0.10, scale = 0.14, seed = 21 }
-drips = { count = 1.0, length = [0.15, 0.6], width = [0.12, 0.2], seed = 4, colour = "fill" }
 stroke = 0.9
 stroke_colour = [118, 13, 9]
