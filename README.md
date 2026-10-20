@@ -4,7 +4,7 @@
 
 Переведены все **1177** строк игры: меню и настройки, субтитры роликов, реплики Чувака, боссов и врагов, Кодекс, подсказки и обучение, названия уровней, оружия и предметов, титры. Подача — в духе русского Postal 2: чёрный юмор, разговорная речь, ругань ровно там, где она есть в оригинале.
 
-Переведены и **надписи на текстурах** (62 текстуры): вывески, плакаты, реклама в поезде, мониторы, таблички, граффити — русский текст нарисован поверх оригинала в похожем стиле.
+Переведены и **надписи на текстурах** (82 текстуры): вывески, плакаты, реклама в поезде, мониторы, таблички, граффити, наклейки на оружии, карта в меню — русский текст нарисован поверх оригинала в похожем стиле.
 
 Озвучка остаётся английской — переведены тексты, субтитры и надписи.
 
@@ -75,4 +75,4 @@ python tools/check_ru.py
 
 ### English
 
-Unofficial fan-made Russian translation for **POSTAL: Brain Damaged** (Steam, incl. *These Sunny Daze* DLC). Run `ru_patch.exe`, press 1, then pick **«Русский»** (replaces the Hungarian slot) in Settings → Language. Option 2 or Steam's *Verify integrity of game files* restores the originals. Since 1.2.0 the in-game signs, posters and ads are translated too. No game files are distributed apart from the translated texture fragments embedded in the patcher.
+Unofficial fan-made Russian translation for **POSTAL: Brain Damaged** (Steam, incl. *These Sunny Daze* DLC). Run `ru_patch.exe`, press 1, then pick **«Русский»** (replaces the Hungarian slot) in Settings → Language. Option 2 or Steam's *Verify integrity of game files* restores the originals. Since 1.2.0 the in-game signs, posters and ads are translated too (82 textures as of 1.3.0). No game files are distributed apart from the translated texture fragments embedded in the patcher.
