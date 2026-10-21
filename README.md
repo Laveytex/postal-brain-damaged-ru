@@ -12,7 +12,7 @@
 
 1. Закрой игру.
 2. Скачай архив `ru_patch_v….zip` из [последнего релиза](https://github.com/Laveytex/postal-brain-damaged-ru/releases/latest) и распакуй куда угодно.
-3. Запусти `ru_patch.exe`, нажми **1** и Enter. Игра находится автоматически через Steam (или положи `ru_patch.exe` в папку игры). Установка занимает 3–5 минут.
+3. Открой папку `ru_patch`, запусти `ru_patch.exe`, нажми **1** и Enter. Игра находится автоматически через Steam (или положи папку `ru_patch` в папку игры). Установка занимает 3–5 минут. Exe работает только вместе с папкой `_internal` рядом — не вынимай его отдельно.
 4. В игре: **Settings → Language → «Русский»**.
 
 Русский встаёт на место венгерского языка (в списке языков «Magyar» превратится в «Русский»), остальные языки не затрагиваются.
@@ -28,7 +28,7 @@
 
 ## Частые вопросы
 
-- **Антивирус ругается на exe.** Патчер собран PyInstaller'ом, на такие exe антивирусы иногда дают ложные срабатывания. Исходный код открыт — можно собрать exe самому (см. ниже) или запустить `ru_patch.py` через Python.
+- **Антивирус ругается на exe.** Патчер собран PyInstaller'ом, на такие exe антивирусы иногда дают ложные срабатывания. В 1.3.0 Защитник Windows блокировал скачивание; с 1.3.1 патчер собирается папкой (`ru_patch.exe` + `_internal`), и такого срабатывания нет. Исходный код открыт — можно собрать патчер самому (см. ниже) или запустить `ru_patch.py` через Python.
 - **Шрифт.** Кириллица нарисована в стиле фирменных шрифтов игры (Smash и Veteran Typewriter) и встраивается прямо в них. Если увидишь квадраты или «чужие» буквы — открой Issue со скриншотом.
 - **Что не переведено:** встроенный туториал редактора модов (около 180 строк, хранятся отдельно); логотипы, бренды и названия реальных игр на текстурах; надписи, нарисованные прямо поверх сложной картинки (их нельзя чисто стереть) — например, логотип «Blue Key» и арка ворот лечебницы.
 
@@ -54,6 +54,8 @@ pip install UnityPy pyinstaller
 build_exe.bat
 ```
 
+Результат — папка `dist\ru_patch\` (`ru_patch.exe` + `_internal`), в релиз она идёт целиком.
+
 Проверка перевода (теги `{0}`, `<color>`, `<input>`, `<br>` должны совпадать с оригиналом):
 
 ```
@@ -75,4 +77,4 @@ python tools/check_ru.py
 
 ### English
 
-Unofficial fan-made Russian translation for **POSTAL: Brain Damaged** (Steam, incl. *These Sunny Daze* DLC). Run `ru_patch.exe`, press 1, then pick **«Русский»** (replaces the Hungarian slot) in Settings → Language. Option 2 or Steam's *Verify integrity of game files* restores the originals. Since 1.2.0 the in-game signs, posters and ads are translated too (82 textures as of 1.3.0). No game files are distributed apart from the translated texture fragments embedded in the patcher.
+Unofficial fan-made Russian translation for **POSTAL: Brain Damaged** (Steam, incl. *These Sunny Daze* DLC). Run `ru_patch\ru_patch.exe` (keep the whole `ru_patch` folder), press 1, then pick **«Русский»** (replaces the Hungarian slot) in Settings → Language. Option 2 or Steam's *Verify integrity of game files* restores the originals. Since 1.2.0 the in-game signs, posters and ads are translated too (82 textures as of 1.3.0). No game files are distributed apart from the translated texture fragments embedded in the patcher.
